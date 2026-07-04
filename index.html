@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CloudScale - Premium Enterprise SaaS Cloud Monitoring & Analytics Dashboard">
+    <title>CloudScale Dashboard</title>
+    
+    <!-- Google Fonts - Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Responsive Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="appSidebar">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <i data-lucide="cpu" class="icon-accent"></i>
+                    </div>
+                    <span class="logo-text">CloudScale</span>
+                </div>
+            </div>
+
+            <!-- Sidebar Navigation Links -->
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">Main Menu</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link active" id="nav-dashboard">
+                                <i data-lucide="layout-dashboard"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="nav-analytics">
+                                <i data-lucide="line-chart"></i>
+                                <span>Analytics</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="nav-servers">
+                                <i data-lucide="server"></i>
+                                <span>Servers</span>
+                                <span class="badge badge-success">99.9%</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="nav-projects">
+                                <i data-lucide="folder-git-2"></i>
+                                <span>Projects</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Management</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="nav-users">
+                                <i data-lucide="users"></i>
+                                <span>Team</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="nav-billing">
+                                <i data-lucide="credit-card"></i>
+                                <span>Billing</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Support & Config</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="nav-settings">
+                                <i data-lucide="settings"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="nav-help">
+                                <i data-lucide="help-circle"></i>
+                                <span>Help Center</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Sidebar User Profile Footer -->
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop" alt="Alex Rivera Profile Pic" class="user-avatar">
+                    <div class="user-info">
+                        <span class="user-name">Alex Rivera</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn" aria-label="Sign out">
+                    <i data-lucide="log-out"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Top Navigation Bar -->
+            <header class="top-nav">
+                <!-- Left Nav Options -->
+                <div class="top-nav-left">
+                    <button class="menu-toggle-btn" id="menuToggle" aria-label="Toggle Sidebar">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    
+                    <div class="breadcrumb-container">
+                        <span class="breadcrumb-item">Platform</span>
+                        <i data-lucide="chevron-right" class="breadcrumb-separator"></i>
+                        <span class="breadcrumb-item active">Dashboard</span>
+                    </div>
+                </div>
+
+                <!-- Right Nav Options -->
+                <div class="top-nav-right">
+                    <!-- Search Bar -->
+                    <div class="search-container">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" placeholder="Search resources, metrics..." class="search-input" id="globalSearch">
+                        <span class="search-shortcut">⌘K</span>
+                    </div>
+
+                    <!-- System Status Indicator -->
+                    <div class="status-indicator-container">
+                        <div class="pulse-ring"></div>
+                        <span class="status-dot"></span>
+                        <span class="status-text text-success">All systems normal</span>
+                    </div>
+
+                    <!-- Notifications Dropdown Trigger -->
+                    <button class="icon-action-btn" id="notificationBtn" aria-label="View notifications">
+                        <i data-lucide="bell"></i>
+                        <span class="notification-badge"></span>
+                    </button>
+
+                    <!-- Avatar Action Trigger -->
+                    <div class="top-nav-profile">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop" alt="Alex Rivera Profile Pic" class="top-avatar">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Viewport -->
+            <main class="dashboard-viewport">
+                <!-- Dashboard Header Area -->
+                <div class="dashboard-header">
+                    <div class="dashboard-title-area">
+                        <div class="dashboard-welcome-row">
+                            <h1 class="dashboard-title">Welcome back, Alex 👋</h1>
+                            <div class="cloud-status-pill">
+                                <span class="status-indicator-dot"></span>
+                                <span class="status-indicator-text">Cloud Status: Operational</span>
+                            </div>
+                        </div>
+                        <p class="dashboard-subtitle" id="current-date">Saturday, July 4, 2026</p>
+                    </div>
+                    <div class="dashboard-actions">
+                        <button class="btn btn-secondary">
+                            <i data-lucide="filter"></i>
+                            <span>Filters</span>
+                        </button>
+                        <button class="btn btn-primary">
+                            <i data-lucide="plus"></i>
+                            <span>New Server</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dashboard Summary Cards Grid -->
+                <div class="dashboard-grid metrics-grid">
+                    <!-- Card 1: Total Projects -->
+                    <div class="metric-card">
+                        <div class="metric-card-header">
+                            <span class="metric-label">Total Projects</span>
+                            <div class="metric-icon-wrapper blue-glow">
+                                <i data-lucide="layers" class="text-blue"></i>
+                            </div>
+                        </div>
+                        <div class="metric-card-body">
+                            <div class="metric-value-row">
+                                <h2 class="metric-value">12</h2>
+                                <span class="trend-badge trend-up">
+                                    <i data-lucide="arrow-up-right"></i>
+                                    <span>+8.2%</span>
+                                </span>
+                            </div>
+                            <div class="metric-sparkline-container">
+                                <svg class="sparkline sparkline-success" viewBox="0 0 100 30" preserveAspectRatio="none">
+                                    <defs>
+                                        <linearGradient id="grad-projects" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="rgba(16, 185, 129, 0.25)"/>
+                                            <stop offset="100%" stop-color="rgba(16, 185, 129, 0)"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M0,22 L15,18 L30,25 L45,15 L60,20 L75,8 L90,12 L100,4" fill="none" stroke="var(--color-success)" stroke-width="2" stroke-linecap="round"></path>
+                                    <path d="M0,22 L15,18 L30,25 L45,15 L60,20 L75,8 L90,12 L100,4 L100,30 L0,30 Z" fill="url(#grad-projects)" stroke="none"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Active Servers -->
+                    <div class="metric-card">
+                        <div class="metric-card-header">
+                            <span class="metric-label">Active Servers</span>
+                            <div class="metric-icon-wrapper purple-glow">
+                                <i data-lucide="server" class="text-purple"></i>
+                            </div>
+                        </div>
+                        <div class="metric-card-body">
+                            <div class="metric-value-row">
+                                <h2 class="metric-value">148<span class="metric-value-total">/150</span></h2>
+                                <span class="trend-badge trend-up">
+                                    <i data-lucide="arrow-up-right"></i>
+                                    <span>+12.4%</span>
+                                </span>
+                            </div>
+                            <div class="metric-sparkline-container">
+                                <svg class="sparkline sparkline-success" viewBox="0 0 100 30" preserveAspectRatio="none">
+                                    <defs>
+                                        <linearGradient id="grad-servers" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="rgba(16, 185, 129, 0.25)"/>
+                                            <stop offset="100%" stop-color="rgba(16, 185, 129, 0)"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M0,25 L15,22 L30,12 L45,18 L60,8 L75,14 L90,5 L100,2" fill="none" stroke="var(--color-success)" stroke-width="2" stroke-linecap="round"></path>
+                                    <path d="M0,25 L15,22 L30,12 L45,18 L60,8 L75,14 L90,5 L100,2 L100,30 L0,30 Z" fill="url(#grad-servers)" stroke="none"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Monthly Revenue -->
+                    <div class="metric-card">
+                        <div class="metric-card-header">
+                            <span class="metric-label">Monthly Revenue</span>
+                            <div class="metric-icon-wrapper blue-glow">
+                                <i data-lucide="dollar-sign" class="text-blue"></i>
+                            </div>
+                        </div>
+                        <div class="metric-card-body">
+                            <div class="metric-value-row">
+                                <h2 class="metric-value">$32,845</h2>
+                                <span class="trend-badge trend-up">
+                                    <i data-lucide="arrow-up-right"></i>
+                                    <span>+18.7%</span>
+                                </span>
+                            </div>
+                            <div class="metric-sparkline-container">
+                                <svg class="sparkline sparkline-success" viewBox="0 0 100 30" preserveAspectRatio="none">
+                                    <defs>
+                                        <linearGradient id="grad-revenue" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="rgba(16, 185, 129, 0.25)"/>
+                                            <stop offset="100%" stop-color="rgba(16, 185, 129, 0)"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M0,28 L15,25 L30,18 L45,22 L60,12 L75,10 L90,4 L100,2" fill="none" stroke="var(--color-success)" stroke-width="2" stroke-linecap="round"></path>
+                                    <path d="M0,28 L15,25 L30,18 L45,22 L60,12 L75,10 L90,4 L100,2 L100,30 L0,30 Z" fill="url(#grad-revenue)" stroke="none"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Cloud Usage -->
+                    <div class="metric-card">
+                        <div class="metric-card-header">
+                            <span class="metric-label">Cloud Usage</span>
+                            <div class="metric-icon-wrapper purple-glow">
+                                <i data-lucide="hard-drive" class="text-purple"></i>
+                            </div>
+                        </div>
+                        <div class="metric-card-body">
+                            <div class="metric-value-row">
+                                <h2 class="metric-value">64.2%</h2>
+                                <span class="trend-badge trend-down">
+                                    <i data-lucide="arrow-down-right"></i>
+                                    <span>-2.1%</span>
+                                </span>
+                            </div>
+                            <div class="metric-sparkline-container">
+                                <svg class="sparkline sparkline-danger" viewBox="0 0 100 30" preserveAspectRatio="none">
+                                    <defs>
+                                        <linearGradient id="grad-usage" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="rgba(239, 68, 68, 0.25)"/>
+                                            <stop offset="100%" stop-color="rgba(239, 68, 68, 0)"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M0,5 L15,8 L30,12 L45,10 L60,18 L75,15 L90,22 L100,25" fill="none" stroke="var(--color-danger)" stroke-width="2" stroke-linecap="round"></path>
+                                    <path d="M0,5 L15,8 L30,12 L45,10 L60,18 L75,15 L90,22 L100,25 L100,30 L0,30 Z" fill="url(#grad-usage)" stroke="none"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     Performance Analytics Card
+                     ============================================================ -->
+                <section class="analytics-section">
+                    <!-- Card Header -->
+                    <div class="analytics-card">
+                        <div class="analytics-card-header">
+                            <div class="analytics-card-title-group">
+                                <div class="analytics-icon-wrap">
+                                    <i data-lucide="activity" class="text-blue"></i>
+                                </div>
+                                <div>
+                                    <h2 class="section-title">Performance Analytics</h2>
+                                    <p class="section-subtitle">CPU &amp; Memory usage over time</p>
+                                </div>
+                            </div>
+
+                            <!-- Time Period Filter Tabs -->
+                            <div class="chart-filter-tabs" role="group" aria-label="Time period filter">
+                                <button class="chart-filter-btn active" id="filter-day" data-period="day">Day</button>
+                                <button class="chart-filter-btn" id="filter-week" data-period="week">Week</button>
+                                <button class="chart-filter-btn" id="filter-month" data-period="month">Month</button>
+                            </div>
+                        </div>
+
+                        <!-- Chart Legend -->
+                        <div class="chart-legend">
+                            <div class="chart-legend-item">
+                                <span class="chart-legend-dot" style="background: #3B82F6;"></span>
+                                <span class="chart-legend-label">CPU Usage</span>
+                                <span class="chart-legend-value" id="legend-cpu">42%</span>
+                            </div>
+                            <div class="chart-legend-item">
+                                <span class="chart-legend-dot" style="background: #8B5CF6;"></span>
+                                <span class="chart-legend-label">Memory Usage</span>
+                                <span class="chart-legend-value" id="legend-mem">61%</span>
+                            </div>
+                        </div>
+
+                        <!-- Chart Canvas -->
+                        <div class="chart-canvas-wrapper">
+                            <canvas id="performanceChart" aria-label="CPU and Memory Performance Chart" role="img"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============================================================
+                     Infrastructure Status Grid
+                     ============================================================ -->
+                <section class="infra-section">
+                    <div class="section-header-row">
+                        <div class="section-header-title-group">
+                            <h2 class="section-title">Infrastructure Status</h2>
+                            <p class="section-subtitle">Live status of your cloud servers</p>
+                        </div>
+                        <button class="btn btn-secondary btn-sm">
+                            <i data-lucide="refresh-cw"></i>
+                            <span>Refresh</span>
+                        </button>
+                    </div>
+
+                    <!-- 3-Column Server Grid -->
+                    <div class="infra-grid">
+
+                        <!-- Server Card 1: us-east-1 (Healthy) -->
+                        <div class="server-card" id="server-prod-01">
+                            <div class="server-card-header">
+                                <div class="server-card-identity">
+                                    <div class="server-uptime-indicator">
+                                        <span class="uptime-dot uptime-online"></span>
+                                        <span class="uptime-pulse-ring"></span>
+                                    </div>
+                                    <div>
+                                        <h3 class="server-name">prod-server-01</h3>
+                                        <div class="server-region">
+                                            <i data-lucide="map-pin"></i>
+                                            <span>us-east-1 &mdash; t3.xlarge</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="server-status-badge status-online">Online</span>
+                            </div>
+
+                            <div class="server-metrics">
+                                <!-- CPU Progress Bar -->
+                                <div class="server-metric-row">
+                                    <div class="server-metric-label-row">
+                                        <span class="server-metric-label">CPU</span>
+                                        <span class="server-metric-value">42%</span>
+                                    </div>
+                                    <div class="progress-track">
+                                        <div class="progress-fill fill-blue" style="width: 42%;"></div>
+                                    </div>
+                                </div>
+                                <!-- RAM Progress Bar -->
+                                <div class="server-metric-row">
+                                    <div class="server-metric-label-row">
+                                        <span class="server-metric-label">RAM</span>
+                                        <span class="server-metric-value">68%</span>
+                                    </div>
+                                    <div class="progress-track">
+                                        <div class="progress-fill fill-purple" style="width: 68%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="server-uptime-row">
+                                <i data-lucide="clock" class="server-uptime-icon"></i>
+                                <span class="server-uptime-label">Uptime: <strong>99.97%</strong> &mdash; 127 days</span>
+                            </div>
+
+                            <div class="server-actions">
+                                <button class="btn btn-secondary btn-sm server-btn" aria-label="Deploy prod-server-01">
+                                    <i data-lucide="rocket"></i>
+                                    <span>Deploy</span>
+                                </button>
+                                <button class="btn btn-danger btn-sm server-btn" aria-label="Restart prod-server-01">
+                                    <i data-lucide="rotate-ccw"></i>
+                                    <span>Restart</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Server Card 2: eu-west-2 (Warning) -->
+                        <div class="server-card" id="server-staging-02">
+                            <div class="server-card-header">
+                                <div class="server-card-identity">
+                                    <div class="server-uptime-indicator">
+                                        <span class="uptime-dot uptime-warning"></span>
+                                    </div>
+                                    <div>
+                                        <h3 class="server-name">staging-02</h3>
+                                        <div class="server-region">
+                                            <i data-lucide="map-pin"></i>
+                                            <span>eu-west-2 &mdash; t3.large</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="server-status-badge status-warning">High Load</span>
+                            </div>
+
+                            <div class="server-metrics">
+                                <div class="server-metric-row">
+                                    <div class="server-metric-label-row">
+                                        <span class="server-metric-label">CPU</span>
+                                        <span class="server-metric-value text-warning">87%</span>
+                                    </div>
+                                    <div class="progress-track">
+                                        <div class="progress-fill fill-warning" style="width: 87%;"></div>
+                                    </div>
+                                </div>
+                                <div class="server-metric-row">
+                                    <div class="server-metric-label-row">
+                                        <span class="server-metric-label">RAM</span>
+                                        <span class="server-metric-value text-warning">91%</span>
+                                    </div>
+                                    <div class="progress-track">
+                                        <div class="progress-fill fill-warning" style="width: 91%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="server-uptime-row">
+                                <i data-lucide="clock" class="server-uptime-icon"></i>
+                                <span class="server-uptime-label">Uptime: <strong>98.2%</strong> &mdash; 84 days</span>
+                            </div>
+
+                            <div class="server-actions">
+                                <button class="btn btn-secondary btn-sm server-btn" aria-label="Deploy staging-02">
+                                    <i data-lucide="rocket"></i>
+                                    <span>Deploy</span>
+                                </button>
+                                <button class="btn btn-danger btn-sm server-btn" aria-label="Restart staging-02">
+                                    <i data-lucide="rotate-ccw"></i>
+                                    <span>Restart</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Server Card 3: ap-southeast-1 (Healthy) -->
+                        <div class="server-card" id="server-backup-03">
+                            <div class="server-card-header">
+                                <div class="server-card-identity">
+                                    <div class="server-uptime-indicator">
+                                        <span class="uptime-dot uptime-online"></span>
+                                        <span class="uptime-pulse-ring"></span>
+                                    </div>
+                                    <div>
+                                        <h3 class="server-name">backup-03</h3>
+                                        <div class="server-region">
+                                            <i data-lucide="map-pin"></i>
+                                            <span>ap-southeast-1 &mdash; t3.medium</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="server-status-badge status-online">Online</span>
+                            </div>
+
+                            <div class="server-metrics">
+                                <div class="server-metric-row">
+                                    <div class="server-metric-label-row">
+                                        <span class="server-metric-label">CPU</span>
+                                        <span class="server-metric-value">18%</span>
+                                    </div>
+                                    <div class="progress-track">
+                                        <div class="progress-fill fill-blue" style="width: 18%;"></div>
+                                    </div>
+                                </div>
+                                <div class="server-metric-row">
+                                    <div class="server-metric-label-row">
+                                        <span class="server-metric-label">RAM</span>
+                                        <span class="server-metric-value">34%</span>
+                                    </div>
+                                    <div class="progress-track">
+                                        <div class="progress-fill fill-purple" style="width: 34%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="server-uptime-row">
+                                <i data-lucide="clock" class="server-uptime-icon"></i>
+                                <span class="server-uptime-label">Uptime: <strong>100%</strong> &mdash; 212 days</span>
+                            </div>
+
+                            <div class="server-actions">
+                                <button class="btn btn-secondary btn-sm server-btn" aria-label="Deploy backup-03">
+                                    <i data-lucide="rocket"></i>
+                                    <span>Deploy</span>
+                                </button>
+                                <button class="btn btn-danger btn-sm server-btn" aria-label="Restart backup-03">
+                                    <i data-lucide="rotate-ccw"></i>
+                                    <span>Restart</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- ============================================================
+                     Lower Half: 2-column layout
+                     ============================================================ -->
+                <div class="lower-grid">
+
+                    <!-- ========================================================
+                         Recent Activities Table
+                         ======================================================== -->
+                    <section class="section-card activities-section" id="activities-section">
+                        <div class="section-card-header">
+                            <div class="section-header-title-group">
+                                <h2 class="section-title">Recent Activities</h2>
+                                <p class="section-subtitle">Latest task executions across all projects</p>
+                            </div>
+                            <div class="dropdown-wrapper">
+                                <button class="btn btn-secondary btn-sm" id="activityFilterBtn" aria-haspopup="true" aria-expanded="false">
+                                    <i data-lucide="sliders-horizontal"></i>
+                                    <span>Filter</span>
+                                </button>
+                                <!-- Dropdown -->
+                                <div class="dropdown-menu" id="activityDropdown" role="menu">
+                                    <button class="dropdown-item active" data-filter="all" role="menuitem">All Tasks</button>
+                                    <button class="dropdown-item" data-filter="completed" role="menuitem">Completed</button>
+                                    <button class="dropdown-item" data-filter="running" role="menuitem">Running</button>
+                                    <button class="dropdown-item" data-filter="failed" role="menuitem">Failed</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activities Table -->
+                        <div class="table-wrapper">
+                            <table class="data-table" id="activitiesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Task</th>
+                                        <th>Project</th>
+                                        <th>Duration</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="activitiesTableBody">
+                                    <tr class="table-row" data-status="completed">
+                                        <td>
+                                            <div class="task-cell">
+                                                <div class="task-icon-wrap icon-blue">
+                                                    <i data-lucide="git-merge"></i>
+                                                </div>
+                                                <div>
+                                                    <span class="task-name">Deploy v2.4.1</span>
+                                                    <span class="task-meta">Triggered by Alex · 2m ago</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="project-tag">prod-frontend</span></td>
+                                        <td><span class="duration-text">3m 24s</span></td>
+                                        <td><span class="status-pill pill-completed">Completed</span></td>
+                                        <td><button class="row-action-btn" aria-label="View task details"><i data-lucide="chevron-right"></i></button></td>
+                                    </tr>
+                                    <tr class="table-row" data-status="running">
+                                        <td>
+                                            <div class="task-cell">
+                                                <div class="task-icon-wrap icon-purple">
+                                                    <i data-lucide="loader"></i>
+                                                </div>
+                                                <div>
+                                                    <span class="task-name">Run Test Suite</span>
+                                                    <span class="task-meta">Triggered by CI · 5m ago</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="project-tag">api-gateway</span></td>
+                                        <td><span class="duration-text">5m 01s&hellip;</span></td>
+                                        <td><span class="status-pill pill-running">Running</span></td>
+                                        <td><button class="row-action-btn" aria-label="View task details"><i data-lucide="chevron-right"></i></button></td>
+                                    </tr>
+                                    <tr class="table-row" data-status="failed">
+                                        <td>
+                                            <div class="task-cell">
+                                                <div class="task-icon-wrap icon-red">
+                                                    <i data-lucide="x-circle"></i>
+                                                </div>
+                                                <div>
+                                                    <span class="task-name">DB Migration</span>
+                                                    <span class="task-meta">Triggered by Alex · 18m ago</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="project-tag">data-warehouse</span></td>
+                                        <td><span class="duration-text">0m 47s</span></td>
+                                        <td><span class="status-pill pill-failed">Failed</span></td>
+                                        <td><button class="row-action-btn" aria-label="View task details"><i data-lucide="chevron-right"></i></button></td>
+                                    </tr>
+                                    <tr class="table-row" data-status="completed">
+                                        <td>
+                                            <div class="task-cell">
+                                                <div class="task-icon-wrap icon-blue">
+                                                    <i data-lucide="shield-check"></i>
+                                                </div>
+                                                <div>
+                                                    <span class="task-name">Security Scan</span>
+                                                    <span class="task-meta">Triggered by CI · 1h ago</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="project-tag">prod-backend</span></td>
+                                        <td><span class="duration-text">8m 12s</span></td>
+                                        <td><span class="status-pill pill-completed">Completed</span></td>
+                                        <td><button class="row-action-btn" aria-label="View task details"><i data-lucide="chevron-right"></i></button></td>
+                                    </tr>
+                                    <tr class="table-row" data-status="running">
+                                        <td>
+                                            <div class="task-cell">
+                                                <div class="task-icon-wrap icon-purple">
+                                                    <i data-lucide="refresh-cw"></i>
+                                                </div>
+                                                <div>
+                                                    <span class="task-name">Cache Rebuild</span>
+                                                    <span class="task-meta">Triggered by Cron · 3m ago</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="project-tag">cdn-edge</span></td>
+                                        <td><span class="duration-text">3m 08s&hellip;</span></td>
+                                        <td><span class="status-pill pill-running">Running</span></td>
+                                        <td><button class="row-action-btn" aria-label="View task details"><i data-lucide="chevron-right"></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- ========================================================
+                         Recent Deployments Timeline + Team Members
+                         ======================================================== -->
+                    <div class="right-column">
+
+                        <!-- Recent Deployments Timeline -->
+                        <section class="section-card deployments-section">
+                            <div class="section-card-header">
+                                <div class="section-header-title-group">
+                                    <h2 class="section-title">Recent Deployments</h2>
+                                    <p class="section-subtitle">Git-triggered releases</p>
+                                </div>
+                                <button class="btn btn-secondary btn-sm">
+                                    <i data-lucide="external-link"></i>
+                                    <span>View all</span>
+                                </button>
+                            </div>
+
+                            <!-- Timeline Items -->
+                            <div class="deployment-timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-line"></div>
+                                    <div class="timeline-dot dot-success"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <span class="timeline-tag">v2.4.1</span>
+                                            <span class="status-pill pill-completed">Live</span>
+                                        </div>
+                                        <p class="timeline-desc">Fix: memory leak in WebSocket handler</p>
+                                        <div class="timeline-meta">
+                                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=40&auto=format&fit=crop" alt="Alex" class="timeline-avatar">
+                                            <span>Alex Rivera &middot; prod-frontend &middot; 2m ago</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-line"></div>
+                                    <div class="timeline-dot dot-running"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <span class="timeline-tag">v3.1.0-rc1</span>
+                                            <span class="status-pill pill-running">Staging</span>
+                                        </div>
+                                        <p class="timeline-desc">Feat: new billing dashboard UI</p>
+                                        <div class="timeline-meta">
+                                            <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=40&auto=format&fit=crop" alt="Sam" class="timeline-avatar">
+                                            <span>Sam Chen &middot; api-gateway &middot; 28m ago</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-line"></div>
+                                    <div class="timeline-dot dot-failed"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <span class="timeline-tag">v2.3.9</span>
+                                            <span class="status-pill pill-failed">Rolled back</span>
+                                        </div>
+                                        <p class="timeline-desc">Chore: DB index optimisation</p>
+                                        <div class="timeline-meta">
+                                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=40&auto=format&fit=crop" alt="Priya" class="timeline-avatar">
+                                            <span>Priya Patel &middot; data-warehouse &middot; 1h ago</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-dot dot-success"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <span class="timeline-tag">v2.3.8</span>
+                                            <span class="status-pill pill-completed">Live</span>
+                                        </div>
+                                        <p class="timeline-desc">Perf: CDN cache headers tuning</p>
+                                        <div class="timeline-meta">
+                                            <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=40&auto=format&fit=crop" alt="Marco" class="timeline-avatar">
+                                            <span>Marco Liu &middot; cdn-edge &middot; 3h ago</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Team Members Grid -->
+                        <section class="section-card team-section">
+                            <div class="section-card-header">
+                                <div class="section-header-title-group">
+                                    <h2 class="section-title">Team Members</h2>
+                                    <p class="section-subtitle">Active contributors</p>
+                                </div>
+                                <button class="btn btn-primary btn-sm">
+                                    <i data-lucide="user-plus"></i>
+                                    <span>Invite</span>
+                                </button>
+                            </div>
+
+                            <div class="team-grid">
+                                <div class="team-member-card">
+                                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=80&auto=format&fit=crop" alt="Alex Rivera" class="team-avatar">
+                                    <div class="team-member-info">
+                                        <span class="team-member-name">Alex Rivera</span>
+                                        <span class="team-member-role">Admin</span>
+                                    </div>
+                                    <span class="team-status-dot status-online-dot"></span>
+                                </div>
+                                <div class="team-member-card">
+                                    <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=80&auto=format&fit=crop" alt="Sam Chen" class="team-avatar">
+                                    <div class="team-member-info">
+                                        <span class="team-member-name">Sam Chen</span>
+                                        <span class="team-member-role">DevOps Lead</span>
+                                    </div>
+                                    <span class="team-status-dot status-online-dot"></span>
+                                </div>
+                                <div class="team-member-card">
+                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=80&auto=format&fit=crop" alt="Priya Patel" class="team-avatar">
+                                    <div class="team-member-info">
+                                        <span class="team-member-name">Priya Patel</span>
+                                        <span class="team-member-role">Backend Eng.</span>
+                                    </div>
+                                    <span class="team-status-dot status-away-dot"></span>
+                                </div>
+                                <div class="team-member-card">
+                                    <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=80&auto=format&fit=crop" alt="Marco Liu" class="team-avatar">
+                                    <div class="team-member-info">
+                                        <span class="team-member-name">Marco Liu</span>
+                                        <span class="team-member-role">Frontend Eng.</span>
+                                    </div>
+                                    <span class="team-status-dot status-offline-dot"></span>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div><!-- /.right-column -->
+
+                </div><!-- /.lower-grid -->
+
+            </main>
+        </div>
+    </div>
+
+    <!-- App Logic Script -->
+    <script src="app.js"></script>
+    <!-- Extended Interactions Script -->
+    <script src="script.js"></script>
+</body>
+</html>
