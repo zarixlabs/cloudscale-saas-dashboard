@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     else srv.status = 'online';
                 }
             });
-            localStorage.setItem('cloudscale_servers', JSON.stringify(window.state.servers));
+            localStorage.setItem('helixops_servers', JSON.stringify(window.state.servers));
 
             if (window.location.hash === '#servers') {
                 const activeFilterBtn = document.querySelector('#serverFilterGroup .chart-filter-btn.active');
@@ -439,7 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         srv.ram = Math.floor(Math.random() * 20) + 50;
                         srv.status = 'online';
                         srv.history = '99.99%';
-                        localStorage.setItem('cloudscale_servers', JSON.stringify(window.state.servers));
+                        localStorage.setItem('helixops_servers', JSON.stringify(window.state.servers));
 
                         const query = document.getElementById('serversViewSearch')?.value || '';
                         const filterVal = document.querySelector('#serverFilterGroup .chart-filter-btn.active')?.dataset.serverFilter || 'all';
@@ -476,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         srv.cpu = 15;
                         srv.ram = 30;
                         srv.status = 'online';
-                        localStorage.setItem('cloudscale_servers', JSON.stringify(window.state.servers));
+                        localStorage.setItem('helixops_servers', JSON.stringify(window.state.servers));
 
                         const query = document.getElementById('serversViewSearch')?.value || '';
                         const filterVal = document.querySelector('#serverFilterGroup .chart-filter-btn.active')?.dataset.serverFilter || 'all';
@@ -510,7 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 project.status = 'running';
                 project.time = 'Just now';
-                localStorage.setItem('cloudscale_projects', JSON.stringify(window.state.projects));
+                localStorage.setItem('helixops_projects', JSON.stringify(window.state.projects));
                 window.renderProjectsList();
                 window.showToast(`Build triggered for ${projName}...`, 'info');
 
@@ -519,7 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     project.status = isSuccess ? 'completed' : 'failed';
                     project.hash = Math.floor(Math.random() * 16777215).toString(16);
                     project.commit = isSuccess ? 'Perf: Optimized asset loading' : 'Error: Build failed in unit tests';
-                    localStorage.setItem('cloudscale_projects', JSON.stringify(window.state.projects));
+                    localStorage.setItem('helixops_projects', JSON.stringify(window.state.projects));
                     window.renderProjectsList();
 
                     if (isSuccess) {
@@ -605,13 +605,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!toggleBtn) return;
 
         // Check local storage or default to dark
-        let currentTheme = localStorage.getItem('cloudscale_theme') || 'dark';
+        let currentTheme = localStorage.getItem('helixops_theme') || 'dark';
         applyTheme(currentTheme);
 
         toggleBtn.addEventListener('click', () => {
             currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
             applyTheme(currentTheme);
-            localStorage.setItem('cloudscale_theme', currentTheme);
+            localStorage.setItem('helixops_theme', currentTheme);
             window.showToast(`Switched to ${currentTheme} theme`, 'success');
         });
 
@@ -802,7 +802,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 window.state.projects.push(newProj);
-                localStorage.setItem('cloudscale_projects', JSON.stringify(window.state.projects));
+                localStorage.setItem('helixops_projects', JSON.stringify(window.state.projects));
                 if (typeof window.renderProjectsList === 'function') {
                     window.renderProjectsList();
                 }

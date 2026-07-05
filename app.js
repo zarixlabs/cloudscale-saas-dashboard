@@ -72,10 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const defaultTeam = [
-        { name: 'Alex Rivera', email: 'alex.rivera@cloudscale.io', role: 'Admin', status: 'online-dot', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=80&auto=format&fit=crop' },
-        { name: 'Sam Chen', email: 'sam.chen@cloudscale.io', role: 'DevOps Lead', status: 'online-dot', avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=80&auto=format&fit=crop' },
-        { name: 'Priya Patel', email: 'priya.patel@cloudscale.io', role: 'Backend Eng.', status: 'away-dot', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=80&auto=format&fit=crop' },
-        { name: 'Marco Liu', email: 'marco.liu@cloudscale.io', role: 'Frontend Eng.', status: 'offline-dot', avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=80&auto=format&fit=crop' }
+        { name: 'Alex Rivera', email: 'alex.rivera@helixops.io', role: 'Admin', status: 'online-dot', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=80&auto=format&fit=crop' },
+        { name: 'Sam Chen', email: 'sam.chen@helixops.io', role: 'DevOps Lead', status: 'online-dot', avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=80&auto=format&fit=crop' },
+        { name: 'Priya Patel', email: 'priya.patel@helixops.io', role: 'Backend Eng.', status: 'away-dot', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=80&auto=format&fit=crop' },
+        { name: 'Marco Liu', email: 'marco.liu@helixops.io', role: 'Frontend Eng.', status: 'offline-dot', avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=80&auto=format&fit=crop' }
     ];
 
     const defaultProjects = [
@@ -93,11 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     function getStore(key, fallback) {
-        const val = localStorage.getItem(`cloudscale_${key}`);
+        const val = localStorage.getItem(`helixops_${key}`);
         return val ? JSON.parse(val) : fallback;
     }
     function setStore(key, data) {
-        localStorage.setItem(`cloudscale_${key}`, JSON.stringify(data));
+        localStorage.setItem(`helixops_${key}`, JSON.stringify(data));
     }
 
     window.state = {
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         invoices: getStore('invoices', defaultInvoices),
         profile: getStore('profile', {
             name: 'Alex Rivera',
-            email: 'alex.rivera@cloudscale.io',
+            email: 'alex.rivera@helixops.io',
             avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop'
         })
     };
@@ -392,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.remove-team-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const email = btn.dataset.email;
-                if (email === 'alex.rivera@cloudscale.io') {
+                if (email === 'alex.rivera@helixops.io') {
                     showToast('Cannot remove system administrator!', 'error');
                     return;
                 }
@@ -438,12 +438,35 @@ document.addEventListener('DOMContentLoaded', () => {
     // SPA CLIENT ROUTER
     // =========================================================================
     function handleRoute() {
-        let hash = window.location.hash || '#dashboard';
+        const originalHash = window.location.hash || '#dashboard';
+        let hash = originalHash;
         
         // Redirect #team hash to #users mapping
         if (hash === '#team') {
             hash = '#users';
-            window.location.hash = '#users';
+        }
+        
+        // HelixOps Redirection Aliases
+        if (hash === '#infrastructure') {
+            hash = '#dashboard';
+        } else if (hash === '#deployments') {
+            hash = '#projects';
+        } else if (hash === '#monitoring') {
+            hash = '#analytics';
+        } else if (hash === '#storage') {
+            hash = '#billing';
+        } else if (hash === '#integrations') {
+            hash = '#settings';
+            setTimeout(() => {
+                const tab = document.querySelector('[data-settings-tab="connected-apps"]');
+                if (tab) tab.click();
+            }, 50);
+        } else if (hash === '#security') {
+            hash = '#settings';
+            setTimeout(() => {
+                const tab = document.querySelector('[data-settings-tab="security"]');
+                if (tab) tab.click();
+            }, 50);
         }
         
         const viewId = `view-${hash.substring(1)}`;
@@ -465,7 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Sync Sidebar Navigation states
         document.querySelectorAll('.nav-link').forEach(link => {
             const targetHash = link.id.replace('nav-', '');
-            if (`#${targetHash}` === hash || (hash === '#dashboard' && targetHash === 'dashboard')) {
+            if (`#${targetHash}` === originalHash || (originalHash === '#dashboard' && targetHash === 'dashboard')) {
                 link.classList.add('active');
             } else {
                 link.classList.remove('active');
@@ -475,7 +498,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Sync Top Breadcrumbs
         const breadcrumbActive = document.querySelector('.breadcrumb-container .breadcrumb-item.active');
         if (breadcrumbActive) {
-            let viewName = hash.substring(1);
+            let viewName = originalHash.substring(1);
             if (viewName === 'users') viewName = 'Team';
             else if (viewName === 'help') viewName = 'Help Center';
             else if (viewName) viewName = viewName.charAt(0).toUpperCase() + viewName.slice(1);

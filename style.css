@@ -4,37 +4,37 @@
 
 /* --- Design System Variables --- */
 :root {
-    /* Color Palette - Premium Dark Theme */
-    --bg-primary: #08090F;       /* Deep space background */
+    /* Color Palette - HelixOps Premium Theme */
+    --bg-primary: #09090B;       /* Dark background */
     --bg-sidebar: #111827;       /* Dark slate gray sidebar */
-    --bg-card: #131826;          /* Rich dark slate card */
-    --bg-header: rgba(17, 24, 39, 0.85); /* Transparent tint */
+    --bg-card: #161B22;          /* Card background */
+    --bg-header: rgba(17, 24, 39, 0.85);
     
     /* Text Colors */
-    --text-primary: #F8FAFC;     /* Bright white */
-    --text-secondary: #94A3B8;   /* Light gray-blue */
-    --text-muted: #64748B;       /* Slate gray */
+    --text-primary: #F8FAFC;     /* Primary text */
+    --text-secondary: #94A3B8;   /* Secondary text */
+    --text-muted: #64748B;       /* Muted text */
     
-    /* Accents (Electric Cyber Cyan & Indigo) */
-    --accent-blue: #00D9FF;      /* Primary cyber cyan */
-    --accent-purple: #6366F1;    /* Secondary accent electric indigo */
+    /* Accents (Cyan & Indigo) */
+    --accent-blue: #06B6D4;      /* Primary Accent cyan */
+    --accent-purple: #6366F1;    /* Secondary Accent indigo */
     --accent-gradient: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-    --accent-hover: #00b4d8;
-    --accent-blue-rgb: 0, 217, 255;
+    --accent-hover: #0891b2;
+    --accent-blue-rgb: 6, 182, 212;
     --accent-purple-rgb: 99, 102, 241;
     
     /* Status Colors */
     --color-success: #22C55E;    /* Success green */
-    --color-warning: #F59E0B;    /* Amber warning */
-    --color-danger: #EF4444;     /* Red danger */
+    --color-warning: #F59E0B;    /* Warning orange */
+    --color-danger: #EF4444;     /* Danger red */
     
     /* Structural Dimensions */
     --sidebar-width: 260px;
     --top-nav-height: 72px;
     
     /* Border & Shadows */
-    --border-color: rgba(255, 255, 255, 0.06);
-    --border-hover: rgba(0, 217, 255, 0.25);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(6, 182, 212, 0.25);
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -3017,13 +3017,13 @@ body {
 
 /* Command Palette styles */
 .command-item.active, .command-item:hover {
-    background: rgba(0, 217, 255, 0.08) !important;
+    background: rgba(var(--accent-blue-rgb), 0.08) !important;
     color: var(--text-primary) !important;
 }
 
 /* Settings navigation items active state glow */
 .settings-nav-item.active {
-    background: rgba(0, 217, 255, 0.05) !important;
+    background: rgba(var(--accent-blue-rgb), 0.05) !important;
     color: var(--accent-blue) !important;
     border-left: 3px solid var(--accent-blue) !important;
     padding-left: 11px !important;
@@ -3045,5 +3045,49 @@ body {
 .dropdown-item-link:hover {
     background: rgba(255,255,255,0.05) !important;
     color: var(--text-primary) !important;
+}
+
+/* --- Typography Scale Hierarchy Overrides --- */
+body {
+    font-size: 16px !important;
+}
+
+.dashboard-title {
+    font-size: 42px !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.03em !important;
+    line-height: 1.15 !important;
+}
+
+.section-title, .billing-card-title, .settings-panel-title {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+}
+
+.card-title, .metric-card-title, .project-card-name, .server-card-name {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.01em !important;
+}
+
+.form-label, label, .nav-section-title {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: var(--text-secondary) !important;
+}
+
+/* Accent highlight tweaks */
+.logo-icon, .logo-text, .accent-glow {
+    color: var(--accent-blue) !important;
+}
+
+/* Interactive elements refinements */
+.btn {
+    border-radius: 16px !important;
+}
+
+.section-card, .analytics-card, .metric-card, .server-card, .project-card {
+    border-radius: 20px !important;
 }
 

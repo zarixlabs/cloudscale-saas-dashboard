@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="CloudScale - Premium Enterprise SaaS Cloud Monitoring & Analytics Dashboard">
-    <title>CloudScale Dashboard</title>
+    <meta name="description" content="HelixOps - Intelligent Cloud Infrastructure Management">
+    <title>HelixOps Dashboard</title>
     
     <!-- Google Fonts - Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,18 +34,18 @@
         <aside class="sidebar" id="appSidebar">
             <!-- Sidebar Header -->
             <div class="sidebar-header">
-                <div class="logo-container">
-                    <div class="logo-icon">
-                        <i data-lucide="cpu" class="icon-accent"></i>
+                <div class="logo-area" style="display: flex; align-items: center; gap: 8px;">
+                    <div class="logo-icon" style="display: flex; align-items: center; justify-content: center; background: rgba(6,182,212,0.1); border-radius: 8px; width: 32px; height: 32px;">
+                        <i data-lucide="hexagon" style="color: var(--accent-blue); width: 18px; height: 18px; stroke-width: 2.5;"></i>
                     </div>
-                    <span class="logo-text">CloudScale</span>
+                    <span class="logo-text" style="font-weight: 800; font-size: 1.15rem; letter-spacing: -0.5px; color: var(--text-primary);">HelixOps</span>
                 </div>
             </div>
 
             <!-- Sidebar Navigation Links -->
             <nav class="sidebar-nav">
                 <div class="nav-section">
-                    <span class="nav-section-title">Main Menu</span>
+                    <span class="nav-section-title">Core Operations</span>
                     <ul class="nav-list">
                         <li class="nav-item">
                             <a href="#" class="nav-link active" id="nav-dashboard">
@@ -54,9 +54,39 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="#" class="nav-link" id="nav-infrastructure">
+                                <i data-lucide="cpu"></i>
+                                <span>Infrastructure</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="nav-deployments">
+                                <i data-lucide="git-branch"></i>
+                                <span>Deployments</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="#" class="nav-link" id="nav-analytics">
                                 <i data-lucide="line-chart"></i>
                                 <span>Analytics</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="nav-monitoring">
+                                <i data-lucide="activity"></i>
+                                <span>Monitoring</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Resources</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="nav-projects">
+                                <i data-lucide="folder-git-2"></i>
+                                <span>Projects</span>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -67,35 +97,41 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link" id="nav-projects">
-                                <i data-lucide="folder-git-2"></i>
-                                <span>Projects</span>
+                            <a href="#" class="nav-link" id="nav-storage">
+                                <i data-lucide="hard-drive"></i>
+                                <span>Storage</span>
                             </a>
                         </li>
                     </ul>
                 </div>
 
                 <div class="nav-section">
-                    <span class="nav-section-title">Management</span>
+                    <span class="nav-section-title">Administration</span>
                     <ul class="nav-list">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" id="nav-users">
-                                <i data-lucide="users"></i>
-                                <span>Team</span>
-                            </a>
-                        </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link" id="nav-billing">
                                 <i data-lucide="credit-card"></i>
                                 <span>Billing</span>
                             </a>
                         </li>
-                    </ul>
-                </div>
-
-                <div class="nav-section">
-                    <span class="nav-section-title">Support & Config</span>
-                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="nav-integrations">
+                                <i data-lucide="webhook"></i>
+                                <span>Integrations</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="nav-security">
+                                <i data-lucide="shield"></i>
+                                <span>Security</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="nav-users">
+                                <i data-lucide="users"></i>
+                                <span>Team</span>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link" id="nav-settings">
                                 <i data-lucide="settings"></i>
@@ -213,7 +249,7 @@
                             <div class="profile-dropdown-header" style="padding: 8px 12px;">
                                 <div class="profile-info-wrap" style="display: flex; flex-direction: column;">
                                     <strong class="user-display-name" style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary);">Alex Rivera</strong>
-                                    <span class="user-display-email" style="font-size: 0.75rem; color: var(--text-secondary);">alex.rivera@cloudscale.io</span>
+                                    <span class="user-display-email" style="font-size: 0.75rem; color: var(--text-secondary);">alex.rivera@helixops.io</span>
                                 </div>
                             </div>
                             <div class="dropdown-divider" style="height: 1px; background: var(--border-color); margin: 6px 0;"></div>
@@ -255,12 +291,10 @@
                     </div>
                 </div>
 
-                <!-- Dashboard Summary Cards Grid -->
-                <div class="dashboard-grid metrics-grid">
-                    <!-- Card 1: Total Projects -->
+                <!-- Dashboard Summary Cards Grid                    <!-- Card 1: Kubernetes Clusters -->
                     <div class="metric-card">
                         <div class="metric-card-header">
-                            <span class="metric-label">Total Projects</span>
+                            <span class="metric-label">Kubernetes Clusters</span>
                             <div class="metric-icon-wrapper blue-glow">
                                 <i data-lucide="layers" class="text-blue"></i>
                             </div>
@@ -288,10 +322,10 @@
                         </div>
                     </div>
 
-                    <!-- Card 2: Active Servers -->
+                    <!-- Card 2: Running Containers -->
                     <div class="metric-card">
                         <div class="metric-card-header">
-                            <span class="metric-label">Active Servers</span>
+                            <span class="metric-label">Running Containers</span>
                             <div class="metric-icon-wrapper purple-glow">
                                 <i data-lucide="server" class="text-purple"></i>
                             </div>
@@ -319,17 +353,17 @@
                         </div>
                     </div>
 
-                    <!-- Card 3: Monthly Revenue -->
+                    <!-- Card 3: Monthly Cloud Cost -->
                     <div class="metric-card">
                         <div class="metric-card-header">
-                            <span class="metric-label">Monthly Revenue</span>
+                            <span class="metric-label">Monthly Cloud Cost</span>
                             <div class="metric-icon-wrapper blue-glow">
                                 <i data-lucide="dollar-sign" class="text-blue"></i>
                             </div>
                         </div>
                         <div class="metric-card-body">
                             <div class="metric-value-row">
-                                <h2 class="metric-value">$32,845</h2>
+                                <h2 class="metric-value">$2,845.00</h2>
                                 <span class="trend-badge trend-up">
                                     <i data-lucide="arrow-up-right"></i>
                                     <span>+18.7%</span>
@@ -350,10 +384,10 @@
                         </div>
                     </div>
 
-                    <!-- Card 4: Cloud Usage -->
+                    <!-- Card 4: CPU Utilization -->
                     <div class="metric-card">
                         <div class="metric-card-header">
-                            <span class="metric-label">Cloud Usage</span>
+                            <span class="metric-label">CPU Utilization</span>
                             <div class="metric-icon-wrapper purple-glow">
                                 <i data-lucide="hard-drive" class="text-purple"></i>
                             </div>
@@ -383,7 +417,7 @@
                 </div>
 
                 <!-- ============================================================
-                     Performance Analytics Card
+                     Live Monitoring Card
                      ============================================================ -->
                 <section class="analytics-section">
                     <!-- Card Header -->
@@ -394,7 +428,7 @@
                                     <i data-lucide="activity" class="text-blue"></i>
                                 </div>
                                 <div>
-                                    <h2 class="section-title">Performance Analytics</h2>
+                                    <h2 class="section-title">Live Monitoring</h2>
                                     <p class="section-subtitle">CPU &amp; Memory usage over time</p>
                                 </div>
                             </div>
@@ -429,12 +463,12 @@
                 </section>
 
                 <!-- ============================================================
-                     Infrastructure Status Grid
+                     Cloud Health Grid
                      ============================================================ -->
                 <section class="infra-section">
                     <div class="section-header-row">
                         <div class="section-header-title-group">
-                            <h2 class="section-title">Infrastructure Status</h2>
+                            <h2 class="section-title">Cloud Health</h2>
                             <p class="section-subtitle">Live status of your cloud servers</p>
                         </div>
                         <button class="btn btn-secondary btn-sm">
@@ -1594,7 +1628,7 @@
                                     <i data-lucide="sparkles" style="color: var(--accent-purple); width: 18px; height: 18px;"></i>
                                     <span>Plan Upgrade Recommended</span>
                                 </h4>
-                                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.5;">Based on your last month compute hours scaling at 92%, we recommend scheduling a free migration consult to upgrade storage bounds to CloudScale Pro+ Unlimited.</p>
+                                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.5;">Based on your last month compute hours scaling at 92%, we recommend scheduling a free migration consult to upgrade storage bounds to HelixOps Pro+ Unlimited.</p>
                                 <button class="btn btn-primary btn-sm" style="margin-top: var(--space-3); padding: 8px 16px !important; font-size: var(--text-xs);">Schedule Consult</button>
                             </div>
 
@@ -1697,7 +1731,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="profileEmail" class="form-label">Email Address</label>
-                                            <input type="email" id="profileEmail" class="form-input" value="alex.rivera@cloudscale.io">
+                                            <input type="email" id="profileEmail" class="form-input" value="alex.rivera@helixops.io">
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-primary" style="margin-top: var(--spacing-lg);">Save Profile</button>
@@ -1774,7 +1808,7 @@
                                     <div class="form-group">
                                         <label class="form-label">Workspace Subdomain Slug</label>
                                         <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden;">
-                                            <span style="padding: 8px 12px; font-size: var(--text-xs); color: var(--text-secondary); background: rgba(255,255,255,0.03); border-right: 1px solid var(--border-color);">https://cloudscale.io/</span>
+                                            <span style="padding: 8px 12px; font-size: var(--text-xs); color: var(--text-secondary); background: rgba(255,255,255,0.03); border-right: 1px solid var(--border-color);">https://helixops.io/</span>
                                             <input type="text" class="form-input" value="zarixlabs" style="border: none; background: none; flex: 1;">
                                         </div>
                                     </div>
@@ -1785,7 +1819,7 @@
                             <!-- Panel 6: API & Webhooks -->
                             <div class="settings-panel" id="settings-panel-api-keys">
                                 <h3 class="settings-panel-title">API Authentication Credentials</h3>
-                                <p class="settings-panel-desc" style="color: var(--color-text-muted); margin-bottom: var(--spacing-md); font-size: 0.875rem;">Use these credential keys to query the CloudScale ingestion engine programmatically.</p>
+                                <p class="settings-panel-desc" style="color: var(--color-text-muted); margin-bottom: var(--spacing-md); font-size: 0.875rem;">Use these credential keys to query the HelixOps ingestion engine programmatically.</p>
                                 <div class="api-key-container" style="margin-top: var(--spacing-md);">
                                     <label class="form-label" style="display: block; margin-bottom: var(--spacing-xs);">Active API Key</label>
                                     <div class="api-key-input-row" style="display: flex; gap: var(--spacing-sm);">
@@ -1803,7 +1837,7 @@
                                     <h4 style="font-size: var(--text-md); font-weight: 700; color: var(--text-primary); margin-bottom: 2px;">Webhook Endpoints</h4>
                                     <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-4);">Push real-time system outage triggers directly to your app server hooks.</p>
                                     <div style="display: flex; gap: 8px; align-items: center; background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-                                        <code style="color: var(--accent-blue); font-size: 11px; flex: 1;">https://api.zarixlabs.com/hooks/cloudscale-receiver</code>
+                                        <code style="color: var(--accent-blue); font-size: 11px; flex: 1;">https://api.helixops.io/hooks/ingest-receiver</code>
                                         <span class="status-pill pill-completed" style="font-size: 9px; padding: 2px 6px;">Active</span>
                                     </div>
                                 </div>
@@ -1950,7 +1984,7 @@
                         <div class="analytics-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
                             <h4 style="font-weight: 700; font-size: var(--text-md); color: var(--text-primary); margin-bottom: var(--space-2); display: flex; align-items: center; gap: 6px;"><i data-lucide="book-open" style="color: var(--accent-blue);"></i> Popular Articles</h4>
                             <ul style="font-size: var(--text-xs); color: var(--text-secondary); display: flex; flex-direction: column; gap: var(--space-2); padding-left: var(--space-3);">
-                                <li><a href="#" style="color: var(--text-secondary); text-decoration: none;">Getting Started with CloudScale</a></li>
+                                <li><a href="#" style="color: var(--text-secondary); text-decoration: none;">Getting Started with HelixOps</a></li>
                                 <li><a href="#" style="color: var(--text-secondary); text-decoration: none;">Configuring Webhooks and Alert Channels</a></li>
                                 <li><a href="#" style="color: var(--text-secondary); text-decoration: none;">Generating Ingestion API Keys</a></li>
                             </ul>
@@ -2043,7 +2077,7 @@
                                 <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.5; margin-bottom: var(--space-3);">As an Enterprise Plan customer, you get direct access to DevOps support engineers. Avg response time: under 5 minutes.</p>
                                 <div style="display: flex; gap: var(--space-2);">
                                     <button class="btn btn-primary btn-sm" id="startLiveChatBtn" style="padding: 6px 12px !important; font-size: var(--text-xs); flex: 1;">Start Live Chat</button>
-                                    <a href="mailto:support@cloudscale.io" class="btn btn-secondary btn-sm" style="padding: 6px 12px !important; font-size: var(--text-xs); display: flex; align-items: center; justify-content: center; gap: 4px; text-decoration: none;">Email Support</a>
+                                    <a href="mailto:support@helixops.io" class="btn btn-secondary btn-sm" style="padding: 6px 12px !important; font-size: var(--text-xs); display: flex; align-items: center; justify-content: center; gap: 4px; text-decoration: none;">Email Support</a>
                                 </div>
                             </div>
 
@@ -2139,7 +2173,7 @@
                     </div>
                     <div class="form-group" style="margin-top: var(--spacing-md);">
                         <label for="memberEmailInput" class="form-label">Email Address</label>
-                        <input type="email" id="memberEmailInput" class="form-input" placeholder="e.g. john@cloudscale.io" required>
+                        <input type="email" id="memberEmailInput" class="form-input" placeholder="e.g. john@helixops.io" required>
                     </div>
                     <div class="form-group" style="margin-top: var(--spacing-md);">
                         <label for="memberRoleInput" class="form-label">System Access Permission Role</label>
