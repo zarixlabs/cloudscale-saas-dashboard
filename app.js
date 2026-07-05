@@ -79,10 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const defaultProjects = [
-        { name: 'prod-frontend', branch: 'main', commit: 'Fix: memory leak in WebSocket handler', hash: 'e0e540e', status: 'completed', time: '2m ago' },
-        { name: 'api-gateway', branch: 'staging', commit: 'Feat: new billing dashboard UI', hash: '614b3d1', status: 'running', time: '28m ago' },
-        { name: 'data-warehouse', branch: 'main', commit: 'Chore: DB index optimisation', hash: 'a10f92b', status: 'failed', time: '1h ago' },
-        { name: 'cdn-edge', branch: 'main', commit: 'Perf: CDN cache headers tuning', hash: 'f56c71a', status: 'completed', time: '3h ago' }
+        { name: 'prod-frontend', branch: 'main', commit: 'Fix: memory leak in WebSocket handler', hash: 'e0e540e', status: 'completed', time: '2m ago', repository: 'zarixlabs/prod-frontend', framework: 'React / Next.js', environment: 'Production', buildDuration: '48s', cpu: '12%', memory: '34%', storage: '1.2 GB', region: 'us-east-1', uptime: '99.98%' },
+        { name: 'api-gateway', branch: 'staging', commit: 'Feat: new billing dashboard UI', hash: '614b3d1', status: 'running', time: '28m ago', repository: 'zarixlabs/api-gateway', framework: 'Node.js / Express', environment: 'Staging', buildDuration: '1m 15s', cpu: '68%', memory: '52%', storage: '2.5 GB', region: 'eu-west-1', uptime: '99.92%' },
+        { name: 'data-warehouse', branch: 'main', commit: 'Chore: DB index optimisation', hash: 'a10f92b', status: 'failed', time: '1h ago', repository: 'zarixlabs/data-warehouse', framework: 'Python / Django', environment: 'Production', buildDuration: '2m 5s', cpu: '0%', memory: '0%', storage: '12.4 GB', region: 'us-west-2', uptime: '99.99%' },
+        { name: 'cdn-edge', branch: 'main', commit: 'Perf: CDN cache headers tuning', hash: 'f56c71a', status: 'completed', time: '3h ago', repository: 'zarixlabs/cdn-edge', framework: 'Go / Fiber', environment: 'Edge', buildDuration: '32s', cpu: '8%', memory: '18%', storage: '0.5 GB', region: 'global', uptime: '100%' }
     ];
 
     const defaultInvoices = [
@@ -273,8 +273,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const grid = document.getElementById('projectsGrid');
         if (!grid) return;
 
+        const searchVal = document.getElementById('projectsSearchInput')?.value.toLowerCase() || '';
+        const filterVal = document.getElementById('projectsFilterDropdown')?.value || 'all';
+        const branchVal = document.getElementById('projectsBranchFilter')?.value || 'all';
+
         grid.innerHTML = '';
-        window.state.projects.forEach(p => {
+        
+        const filtered = window.state.projects.filter(p => {
+            const matchesSearch = p.name.toLowerCase().includes(searchVal) || 
+                                  (p.repository && p.repository.toLowerCase().includes(searchVal)) || 
+                                  p.commit.toLowerCase().includes(searchVal);
+            const matchesEnv = filterVal === 'all' || (p.environment && p.environment.toLowerCase() === filterVal);
+            const matchesBranch = branchVal === 'all' || p.branch === branchVal;
+            return matchesSearch && matchesEnv && matchesBranch;
+        });
+
+        if (filtered.length === 0) {
+            grid.innerHTML = `<div style="grid-column: 1/-1; padding: var(--space-8); text-align: center; color: var(--text-secondary); background: rgba(255,255,255,0.01); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">No projects matched the selected filters.</div>`;
+            return;
+        }
+
+        filtered.forEach(p => {
             const card = document.createElement('div');
             card.className = 'project-card';
 
@@ -289,25 +308,40 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             card.innerHTML = `
-                <div class="project-card-header">
+                <div class="project-card-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-3);">
                     <div class="project-card-title-group">
-                        <span class="project-card-name">${p.name}</span>
-                        <span class="project-card-branch">
-                            <i data-lucide="git-branch" style="width: 12px; height: 12px;"></i>
-                            <span>${p.branch}</span>
+                        <h4 class="project-card-name" style="font-size: var(--text-md); font-weight: 700; color: var(--text-primary); margin-bottom: 2px;">${p.name}</h4>
+                        <span class="project-card-repo" style="font-size: var(--text-xs); color: var(--text-secondary); display: flex; align-items: center; gap: 4px;">
+                            <i data-lucide="github" style="width: 12px; height: 12px;"></i>
+                            <span>${p.repository || 'zarixlabs/' + p.name}</span>
                         </span>
                     </div>
                     <span class="status-pill ${statusClass}">${statusLabel}</span>
                 </div>
-                <div class="project-card-commit">
-                    <strong>${p.hash}</strong> &mdash; ${p.commit}
+                
+                <div class="project-card-details" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2) var(--space-4); margin: var(--space-4) 0; padding: var(--space-2) 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: var(--text-xs); color: var(--text-secondary);">
+                    <div>Framework: <strong style="color: var(--text-primary);">${p.framework || 'Vanilla HTML'}</strong></div>
+                    <div>Environment: <strong style="color: var(--text-primary);">${p.environment || 'Production'}</strong></div>
+                    <div>Region: <strong style="color: var(--text-primary);">${p.region || 'us-east-1'}</strong></div>
+                    <div>Uptime: <strong style="color: var(--color-success);">${p.uptime || '99.9%'}</strong></div>
+                    <div>CPU Load: <strong style="color: var(--text-primary);">${p.cpu || '10%'}</strong></div>
+                    <div>RAM: <strong style="color: var(--text-primary);">${p.memory || '25%'}</strong></div>
                 </div>
-                <div class="project-card-footer">
-                    <span class="project-card-meta">Updated ${p.time}</span>
-                    <button class="btn btn-secondary btn-sm project-build-btn" data-project-name="${p.name}">
-                        <i data-lucide="play" style="width: 12px; height: 12px; margin-right: 4px;"></i>
-                        <span>Trigger Build</span>
+
+                <div class="project-card-commit" style="font-size: 0.8125rem; margin-bottom: var(--space-4); background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-purple);">
+                    <div style="font-weight: 700; font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: 2px;">Last Commit (${p.hash}):</div>
+                    <div style="color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p.commit}</div>
+                </div>
+
+                <div class="project-card-footer" style="display: flex; gap: var(--space-2); margin-top: var(--space-3);">
+                    <button class="btn btn-primary btn-sm project-build-btn" data-project-name="${p.name}" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 4px; padding: 6px 12px !important; font-size: var(--text-xs);">
+                        <i data-lucide="play" style="width: 12px; height: 12px;"></i>
+                        <span>Deploy</span>
                     </button>
+                    <a href="#analytics" class="btn btn-secondary btn-sm" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 4px; padding: 6px 12px !important; font-size: var(--text-xs); text-decoration: none;">
+                        <i data-lucide="line-chart" style="width: 12px; height: 12px;"></i>
+                        <span>Analytics</span>
+                    </a>
                 </div>
             `;
             grid.appendChild(card);
@@ -460,6 +494,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderTeamList();
         } else if (hash === '#billing') {
             renderBillingInvoices();
+            initBillingCharts();
         }
     }
 
@@ -488,17 +523,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // =========================================================================
     let responseChartInst = null;
     let trafficChartInst = null;
+    let cpuChartInst = null;
+    let memoryChartInst = null;
+    let sourceChartInst = null;
+    let latencyChartInst = null;
 
     function initAnalyticsCharts() {
         const respCanvas = document.getElementById('responseTimeChart');
         const trafCanvas = document.getElementById('trafficDistributionChart');
+        const cpuCanvas = document.getElementById('cpuBreakdownChart');
+        const memCanvas = document.getElementById('memoryAllocChart');
+        const sourceCanvas = document.getElementById('trafficSourceChart');
+        const latCanvas = document.getElementById('latencyTimelineChart');
 
+        // Response Time
         if (respCanvas && typeof Chart !== 'undefined' && !responseChartInst) {
             const ctx = respCanvas.getContext('2d');
-            
             const grad = ctx.createLinearGradient(0, 0, 0, 200);
-            grad.addColorStop(0, 'rgba(59, 130, 246, 0.25)');
-            grad.addColorStop(1, 'rgba(59, 130, 246, 0)');
+            grad.addColorStop(0, 'rgba(0, 217, 255, 0.25)');
+            grad.addColorStop(1, 'rgba(0, 217, 255, 0)');
 
             responseChartInst = new Chart(ctx, {
                 type: 'line',
@@ -507,7 +550,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     datasets: [{
                         label: 'P90 Latency (ms)',
                         data: [210, 230, 195, 280, 245, 190, 220],
-                        borderColor: '#3B82F6',
+                        borderColor: '#00D9FF',
                         backgroundColor: grad,
                         borderWidth: 2.5,
                         fill: true,
@@ -526,6 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // Traffic Distribution
         if (trafCanvas && typeof Chart !== 'undefined' && !trafficChartInst) {
             const ctx = trafCanvas.getContext('2d');
             trafficChartInst = new Chart(ctx, {
@@ -535,7 +579,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     datasets: [{
                         label: 'Requests (Thousands)',
                         data: [320, 180, 95, 640, 480],
-                        backgroundColor: '#8B5CF6',
+                        backgroundColor: '#6366F1',
                         borderRadius: 6,
                         borderWidth: 0
                     }]
@@ -549,6 +593,192 @@ document.addEventListener('DOMContentLoaded', () => {
                         y: { grid: { color: 'rgba(255,255,255,0.04)' } }
                     }
                 }
+            });
+        }
+
+        // CPU Breakdown
+        if (cpuCanvas && typeof Chart !== 'undefined' && !cpuChartInst) {
+            const ctx = cpuCanvas.getContext('2d');
+            cpuChartInst = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Used', 'Free'],
+                    datasets: [{
+                        data: [45, 55],
+                        backgroundColor: ['#00D9FF', 'rgba(255,255,255,0.05)'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    cutout: '75%'
+                }
+            });
+        }
+
+        // RAM Allocation
+        if (memCanvas && typeof Chart !== 'undefined' && !memoryChartInst) {
+            const ctx = memCanvas.getContext('2d');
+            memoryChartInst = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Used', 'Free'],
+                    datasets: [{
+                        data: [62, 38],
+                        backgroundColor: ['#6366F1', 'rgba(255,255,255,0.05)'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    cutout: '75%'
+                }
+            });
+        }
+
+        // Traffic Sources
+        if (sourceCanvas && typeof Chart !== 'undefined' && !sourceChartInst) {
+            const ctx = sourceCanvas.getContext('2d');
+            sourceChartInst = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Direct', 'Organic Search', 'Referrals'],
+                    datasets: [{
+                        data: [40, 35, 25],
+                        backgroundColor: ['#00D9FF', '#6366F1', 'rgba(255,255,255,0.15)'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: true, position: 'right', labels: { color: '#94A3B8', font: { size: 10 } } } }
+                }
+            });
+        }
+
+        // Latency Timeline
+        if (latCanvas && typeof Chart !== 'undefined' && !latencyChartInst) {
+            const ctx = latCanvas.getContext('2d');
+            const grad = ctx.createLinearGradient(0, 0, 0, 100);
+            grad.addColorStop(0, 'rgba(99, 102, 241, 0.25)');
+            grad.addColorStop(1, 'rgba(99, 102, 241, 0)');
+
+            latencyChartInst = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['1m ago', '45s ago', '30s ago', '15s ago', 'now'],
+                    datasets: [{
+                        label: 'Latency (ms)',
+                        data: [10, 15, 12, 16, 14.8],
+                        borderColor: '#6366F1',
+                        backgroundColor: grad,
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { min: 5, max: 25, grid: { color: 'rgba(255,255,255,0.04)' } }
+                    }
+                }
+            });
+        }
+
+        // Wire Export Report Action
+        const exportBtn = document.getElementById('exportReportBtn');
+        if (exportBtn) {
+            exportBtn.addEventListener('click', () => {
+                window.showToast('Generating report formats...', 'info');
+                setTimeout(() => {
+                    window.showToast('System report exported to PDF!', 'success');
+                }, 1500);
+            });
+        }
+    }
+
+    let monthlySpendChartInst = null;
+    let annualSpendChartInst = null;
+
+    function initBillingCharts() {
+        const monthlyCanvas = document.getElementById('monthlySpendChart');
+        const annualCanvas = document.getElementById('annualSpendChart');
+
+        if (monthlyCanvas && typeof Chart !== 'undefined' && !monthlySpendChartInst) {
+            const ctx = monthlyCanvas.getContext('2d');
+            const grad = ctx.createLinearGradient(0, 0, 0, 150);
+            grad.addColorStop(0, 'rgba(0, 217, 255, 0.25)');
+            grad.addColorStop(1, 'rgba(0, 217, 255, 0)');
+
+            monthlySpendChartInst = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'Spend ($)',
+                        data: [120, 150, 180, 220, 250, 299, 299],
+                        borderColor: '#00D9FF',
+                        backgroundColor: grad,
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { min: 50, max: 350, grid: { color: 'rgba(255,255,255,0.04)' } }
+                    }
+                }
+            });
+        }
+
+        if (annualCanvas && typeof Chart !== 'undefined' && !annualSpendChartInst) {
+            const ctx = annualCanvas.getContext('2d');
+            annualSpendChartInst = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['2023', '2024', '2025', '2026 (YTD)'],
+                    datasets: [{
+                        label: 'Annual Spend ($)',
+                        data: [1200, 2400, 3100, 2093],
+                        backgroundColor: '#6366F1',
+                        borderRadius: 6,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { grid: { color: 'rgba(255,255,255,0.04)' } }
+                    }
+                }
+            });
+        }
+
+        // Wire download all invoices action
+        const downloadAllBtn = document.getElementById('downloadAllInvoicesBtn');
+        if (downloadAllBtn) {
+            downloadAllBtn.addEventListener('click', () => {
+                window.showToast('Compiling invoice documents...', 'info');
+                setTimeout(() => {
+                    window.showToast('All invoices downloaded as a zip package!', 'success');
+                }, 1500);
             });
         }
     }

@@ -532,6 +532,384 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // =========================================================================
+    // 13. WORKSPACE, NOTIFICATIONS, PROFILE DROPDOWNS
+    // =========================================================================
+    function setupTopNavDropdowns() {
+        const workspaceBtn = document.getElementById('workspaceSwitcherBtn');
+        const workspaceDropdown = document.getElementById('workspaceDropdown');
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const topAvatarBtn = document.getElementById('topAvatarBtn');
+        const profileDropdown = document.getElementById('profileDropdown');
+
+        function closeAll() {
+            if (workspaceDropdown) workspaceDropdown.style.display = 'none';
+            if (notificationDropdown) notificationDropdown.style.display = 'none';
+            if (profileDropdown) profileDropdown.style.display = 'none';
+        }
+
+        if (workspaceBtn && workspaceDropdown) {
+            workspaceBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isShown = workspaceDropdown.style.display === 'block';
+                closeAll();
+                workspaceDropdown.style.display = isShown ? 'none' : 'block';
+            });
+        }
+
+        if (notificationBtn && notificationDropdown) {
+            notificationBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isShown = notificationDropdown.style.display === 'block';
+                closeAll();
+                notificationDropdown.style.display = isShown ? 'none' : 'block';
+            });
+        }
+
+        if (topAvatarBtn && profileDropdown) {
+            topAvatarBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isShown = profileDropdown.style.display === 'block';
+                closeAll();
+                profileDropdown.style.display = isShown ? 'none' : 'block';
+            });
+        }
+
+        document.addEventListener('click', () => {
+            closeAll();
+        });
+
+        // Clear all notifications
+        const clearNotificationsBtn = document.getElementById('clearAllNotificationsBtn');
+        const notificationsList = document.getElementById('notificationsList');
+        const badge = document.querySelector('#notificationBtn .notification-badge');
+        if (clearNotificationsBtn && notificationsList) {
+            clearNotificationsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                notificationsList.innerHTML = '<div style="padding: 16px; text-align: center; color: var(--text-secondary); font-size: 0.8125rem;">No new notifications</div>';
+                if (badge) badge.style.display = 'none';
+                window.showToast('Notifications cleared', 'success');
+            });
+        }
+    }
+    setupTopNavDropdowns();
+
+    // =========================================================================
+    // 14. THEME TOGGLE
+    // =========================================================================
+    function setupThemeToggle() {
+        const toggleBtn = document.getElementById('themeToggleBtn');
+        const sunIcon = document.getElementById('themeToggleIconSun');
+        const moonIcon = document.getElementById('themeToggleIconMoon');
+        if (!toggleBtn) return;
+
+        // Check local storage or default to dark
+        let currentTheme = localStorage.getItem('cloudscale_theme') || 'dark';
+        applyTheme(currentTheme);
+
+        toggleBtn.addEventListener('click', () => {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(currentTheme);
+            localStorage.setItem('cloudscale_theme', currentTheme);
+            window.showToast(`Switched to ${currentTheme} theme`, 'success');
+        });
+
+        function applyTheme(theme) {
+            if (theme === 'light') {
+                document.body.classList.add('light-theme');
+                document.body.classList.remove('dark-theme');
+                if (sunIcon) sunIcon.style.display = 'block';
+                if (moonIcon) moonIcon.style.display = 'none';
+                // Override root colors for light mode dynamically
+                document.documentElement.style.setProperty('--bg-primary', '#F1F5F9');
+                document.documentElement.style.setProperty('--bg-sidebar', '#FFFFFF');
+                document.documentElement.style.setProperty('--bg-card', '#FFFFFF');
+                document.documentElement.style.setProperty('--text-primary', '#0F172A');
+                document.documentElement.style.setProperty('--text-secondary', '#475569');
+                document.documentElement.style.setProperty('--border-color', 'rgba(15, 23, 42, 0.08)');
+            } else {
+                document.body.classList.remove('light-theme');
+                document.body.classList.add('dark-theme');
+                if (sunIcon) sunIcon.style.display = 'none';
+                if (moonIcon) moonIcon.style.display = 'block';
+                // Restore dark mode values
+                document.documentElement.style.setProperty('--bg-primary', '#08090F');
+                document.documentElement.style.setProperty('--bg-sidebar', '#111827');
+                document.documentElement.style.setProperty('--bg-card', '#131826');
+                document.documentElement.style.setProperty('--text-primary', '#F8FAFC');
+                document.documentElement.style.setProperty('--text-secondary', '#94A3B8');
+                document.documentElement.style.setProperty('--border-color', 'rgba(255, 255, 255, 0.06)');
+            }
+        }
+    }
+    setupThemeToggle();
+
+    // =========================================================================
+    // 15. COMMAND PALETTE
+    // =========================================================================
+    function setupCommandPalette() {
+        const palette = document.getElementById('commandPalette');
+        const paletteInput = document.getElementById('commandPaletteInput');
+        const globalSearchContainer = document.getElementById('globalSearchContainer');
+
+        if (!palette) return;
+
+        function openPalette() {
+            palette.style.display = 'flex';
+            paletteInput.value = '';
+            paletteInput.focus();
+            filterCommands('');
+        }
+
+        function closePalette() {
+            palette.style.display = 'none';
+        }
+
+        if (globalSearchContainer) {
+            globalSearchContainer.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openPalette();
+            });
+        }
+
+        // Toggle on Ctrl+K or Cmd+K
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                if (palette.style.display === 'flex') {
+                    closePalette();
+                } else {
+                    openPalette();
+                }
+            } else if (e.key === 'Escape') {
+                closePalette();
+            }
+        });
+
+        // Close on backdrop click
+        palette.addEventListener('click', (e) => {
+            if (e.target === palette) {
+                closePalette();
+            }
+        });
+
+        // Filter items
+        paletteInput.addEventListener('input', (e) => {
+            filterCommands(e.target.value);
+        });
+
+        function filterCommands(query) {
+            const items = palette.querySelectorAll('.command-item');
+            const cleanQuery = query.toLowerCase().trim();
+            let firstVisible = null;
+
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                const matches = text.includes(cleanQuery);
+                item.style.display = matches ? 'flex' : 'none';
+                item.classList.remove('active');
+                if (matches && !firstVisible) {
+                    firstVisible = item;
+                }
+            });
+
+            if (firstVisible) {
+                firstVisible.classList.add('active');
+            }
+        }
+
+        // Trigger action on item click
+        palette.querySelectorAll('.command-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const action = item.dataset.action;
+                const target = item.dataset.target;
+
+                closePalette();
+
+                if (action === 'nav') {
+                    window.location.hash = target;
+                } else if (action === 'trigger') {
+                    if (target === 'new-server') {
+                        const modal = document.getElementById('newServerModal');
+                        if (modal) modal.classList.add('open');
+                    } else if (target === 'invite-member') {
+                        const modal = document.getElementById('inviteMemberModal');
+                        if (modal) modal.classList.add('open');
+                    }
+                }
+            });
+        });
+    }
+    setupCommandPalette();
+
+    // =========================================================================
+    // 16. PROJECTS SEARCH & FILTER BINDINGS
+    // =========================================================================
+    function setupProjectsFilters() {
+        const searchInput = document.getElementById('projectsSearchInput');
+        const filterDropdown = document.getElementById('projectsFilterDropdown');
+        const branchFilter = document.getElementById('projectsBranchFilter');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                if (typeof window.renderProjectsList === 'function') {
+                    window.renderProjectsList();
+                }
+            });
+        }
+
+        if (filterDropdown) {
+            filterDropdown.addEventListener('change', () => {
+                if (typeof window.renderProjectsList === 'function') {
+                    window.renderProjectsList();
+                }
+            });
+        }
+
+        if (branchFilter) {
+            branchFilter.addEventListener('change', () => {
+                if (typeof window.renderProjectsList === 'function') {
+                    window.renderProjectsList();
+                }
+            });
+        }
+
+        const createProjBtn = document.getElementById('createProjectBtn');
+        if (createProjBtn) {
+            createProjBtn.addEventListener('click', () => {
+                const name = prompt('Enter project name:');
+                if (!name) return;
+                const repo = prompt('Enter repository (e.g. org/repo):', `zarixlabs/${name}`);
+                if (!repo) return;
+
+                const newProj = {
+                    name: name,
+                    branch: 'main',
+                    commit: 'Initial commit',
+                    hash: Math.floor(Math.random() * 16777215).toString(16),
+                    status: 'completed',
+                    time: 'Just now',
+                    repository: repo,
+                    framework: 'React / Next.js',
+                    environment: 'Production',
+                    buildDuration: '45s',
+                    cpu: '0%',
+                    memory: '0%',
+                    storage: '0.1 GB',
+                    region: 'us-east-1',
+                    uptime: '100%'
+                };
+
+                window.state.projects.push(newProj);
+                localStorage.setItem('cloudscale_projects', JSON.stringify(window.state.projects));
+                if (typeof window.renderProjectsList === 'function') {
+                    window.renderProjectsList();
+                }
+                window.showToast(`Project ${name} created successfully!`, 'success');
+            });
+        }
+
+        const addEnvVarBtn = document.getElementById('addEnvVarBtn');
+        if (addEnvVarBtn) {
+            addEnvVarBtn.addEventListener('click', () => {
+                const key = prompt('Enter Variable Key:');
+                if (!key) return;
+                const val = prompt('Enter Variable Value:');
+                if (!val) return;
+
+                const list = document.querySelector('.env-vars-list');
+                if (list) {
+                    const row = document.createElement('div');
+                    row.className = 'env-var-row';
+                    row.style.cssText = 'display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 10px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-top: var(--space-2);';
+                    row.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: var(--space-4);">
+                            <span class="text-mono" style="font-weight: 700; color: var(--accent-blue);">${key}</span>
+                            <span class="text-mono text-muted" style="color: var(--text-secondary);">••••••••••••••••••••••••••••••••</span>
+                        </div>
+                        <button class="icon-action-btn" style="background: none; border: none; color: var(--text-secondary); cursor: pointer;"><i data-lucide="eye" style="width: 16px; height: 16px;"></i></button>
+                    `;
+                    list.appendChild(row);
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                    window.showToast(`Environment variable ${key} added`, 'success');
+                }
+            });
+        }
+    }
+    setupProjectsFilters();
+
+    // =========================================================================
+    // 17. FAQ ACCORDION & SUPPORT TICKETS
+    // =========================================================================
+    function setupHelpCenter() {
+        // FAQ Accordion
+        const triggers = document.querySelectorAll('.faq-trigger');
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                const panel = trigger.nextElementSibling;
+                const icon = trigger.querySelector('.faq-icon');
+                const isOpen = panel.style.maxHeight && panel.style.maxHeight !== '0px';
+
+                // Close all other panels
+                document.querySelectorAll('.faq-panel').forEach(p => {
+                    p.style.maxHeight = '0px';
+                });
+                document.querySelectorAll('.faq-icon').forEach(i => {
+                    if (i) i.style.transform = 'rotate(0deg)';
+                });
+
+                if (!isOpen) {
+                    panel.style.maxHeight = panel.scrollHeight + 'px';
+                    if (icon) icon.style.transform = 'rotate(180deg)';
+                } else {
+                    panel.style.maxHeight = '0px';
+                    if (icon) icon.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+
+        // Ticket Submission
+        const ticketForm = document.getElementById('supportTicketForm');
+        const historyList = document.getElementById('ticketHistoryList');
+        if (ticketForm && historyList) {
+            ticketForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const subject = document.getElementById('ticketSubject').value;
+                const priority = document.getElementById('ticketPriority').value;
+                const message = document.getElementById('ticketMessage').value;
+
+                // Create new ticket element
+                const ticketId = 'TC-' + Math.floor(1000 + Math.random() * 9000);
+                const item = document.createElement('div');
+                item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: var(--text-xs); margin-top: var(--space-2);';
+                item.innerHTML = `
+                    <div>
+                        <strong style="color: var(--text-primary);">${ticketId}: ${subject}</strong>
+                        <span style="display: block; color: var(--text-secondary); margin-top: 2px;">Submitted just now &mdash; ${priority.toUpperCase()} severity</span>
+                    </div>
+                    <span class="status-pill pill-running" style="font-size: 9px; padding: 2px 6px;">Open</span>
+                `;
+
+                historyList.appendChild(item);
+                ticketForm.reset();
+                window.showToast(`Ticket ${ticketId} created!`, 'success');
+            });
+        }
+
+        // Live Chat Button
+        const chatBtn = document.getElementById('startLiveChatBtn');
+        if (chatBtn) {
+            chatBtn.addEventListener('click', () => {
+                window.showToast('Connecting to support engineer...', 'info');
+                setTimeout(() => {
+                    window.showToast('Support engineer connected in chat console.', 'success');
+                }, 1500);
+            });
+        }
+    }
+    setupHelpCenter();
+
     // Initial listener binding
     window.setupServerControlListeners();
     window.setupProjectBuildListeners();

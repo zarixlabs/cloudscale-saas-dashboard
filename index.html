@@ -132,12 +132,29 @@
             <!-- Top Navigation Bar -->
             <header class="top-nav">
                 <!-- Left Nav Options -->
-                <div class="top-nav-left">
-                    <button class="menu-toggle-btn" id="menuToggle" aria-label="Toggle Sidebar">
+                <div class="top-nav-left" style="display: flex; align-items: center;">
+                    <!-- Mobile Viewport Menu Trigger -->
+                    <button class="mobile-sidebar-toggle" id="mobileSidebarToggle" aria-label="Toggle Navigation Menu">
                         <i data-lucide="menu"></i>
                     </button>
                     
-                    <div class="breadcrumb-container">
+                    <!-- Workspace Switcher -->
+                    <div class="workspace-switcher-container" style="position: relative;">
+                        <button class="workspace-switcher-btn" id="workspaceSwitcherBtn" style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: var(--radius-btn); color: var(--text-primary); cursor: pointer; font-weight: 600; font-size: var(--text-sm);">
+                            <div class="workspace-avatar" style="width: 20px; height: 20px; background: var(--accent-gradient); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #fff;">XL</div>
+                            <span class="workspace-name">Zarix Labs</span>
+                            <i data-lucide="chevrons-up-down" style="width: 12px; height: 12px; opacity: 0.5;"></i>
+                        </button>
+                        <div class="dropdown-menu" id="workspaceDropdown" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); z-index: 100; min-width: 180px; padding: 6px; backdrop-filter: blur(20px);">
+                            <div class="dropdown-header" style="padding: 6px 12px; font-size: var(--text-xs); color: var(--text-secondary); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Workspaces</div>
+                            <button class="dropdown-item active" style="display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 12px; border: none; background: rgba(255,255,255,0.05); color: var(--text-primary); text-align: left; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer;"><i data-lucide="check" style="width: 14px; height: 14px; color: var(--accent-blue);"></i> <span>Zarix Labs</span></button>
+                            <button class="dropdown-item" style="display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 12px; border: none; background: none; color: var(--text-secondary); text-align: left; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer;"><i data-lucide="plus" style="width: 14px; height: 14px;"></i> <span>Personal Space</span></button>
+                            <div class="dropdown-divider" style="height: 1px; background: var(--border-color); margin: 6px 0;"></div>
+                            <button class="dropdown-item" style="display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 12px; border: none; background: none; color: var(--text-secondary); text-align: left; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer;"><i data-lucide="settings" style="width: 14px; height: 14px;"></i> <span>Manage Workspace</span></button>
+                        </div>
+                    </div>
+
+                    <div class="breadcrumb-container" style="margin-left: var(--space-4);">
                         <span class="breadcrumb-item">Platform</span>
                         <i data-lucide="chevron-right" class="breadcrumb-separator"></i>
                         <span class="breadcrumb-item active">Dashboard</span>
@@ -145,30 +162,67 @@
                 </div>
 
                 <!-- Right Nav Options -->
-                <div class="top-nav-right">
+                <div class="top-nav-right" style="display: flex; align-items: center; gap: var(--space-4);">
                     <!-- Search Bar -->
-                    <div class="search-container">
+                    <div class="search-container" id="globalSearchContainer" style="cursor: pointer;">
                         <i data-lucide="search" class="search-icon"></i>
-                        <input type="text" placeholder="Search resources, metrics..." class="search-input" id="globalSearch">
+                        <input type="text" placeholder="Search page (Ctrl + K)..." class="search-input" id="globalSearch" readonly style="pointer-events: none;">
                         <span class="search-shortcut">⌘K</span>
                     </div>
 
-                    <!-- System Status Indicator -->
-                    <div class="status-indicator-container">
-                        <div class="pulse-ring"></div>
-                        <span class="status-dot"></span>
-                        <span class="status-text text-success">All systems normal</span>
-                    </div>
-
-                    <!-- Notifications Dropdown Trigger -->
-                    <button class="icon-action-btn" id="notificationBtn" aria-label="View notifications">
-                        <i data-lucide="bell"></i>
-                        <span class="notification-badge"></span>
+                    <!-- Theme Toggle -->
+                    <button class="icon-action-btn" id="themeToggleBtn" aria-label="Toggle dark/light mode" style="background: none; border: none; color: var(--text-secondary); cursor: pointer;">
+                        <i data-lucide="sun" id="themeToggleIconSun" style="display: none;"></i>
+                        <i data-lucide="moon" id="themeToggleIconMoon"></i>
                     </button>
 
-                    <!-- Avatar Action Trigger -->
-                    <div class="top-nav-profile">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop" alt="Alex Rivera Profile Pic" class="top-avatar">
+                    <!-- Notifications Dropdown -->
+                    <div class="dropdown-parent" style="position: relative;">
+                        <button class="icon-action-btn" id="notificationBtn" aria-label="View notifications" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; position: relative;">
+                            <i data-lucide="bell"></i>
+                            <span class="notification-badge" style="position: absolute; top: 0; right: 0; width: 8px; height: 8px; background: var(--color-danger); border-radius: 50%;"></span>
+                        </button>
+                        <div class="dropdown-menu notifications-dropdown" id="notificationDropdown" style="display: none; position: absolute; top: calc(100% + 8px); right: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); z-index: 100; min-width: 280px; padding: 6px; backdrop-filter: blur(20px);">
+                            <div class="dropdown-header" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 12px; font-size: var(--text-xs); color: var(--text-secondary); text-transform: uppercase; font-weight: 700;">
+                                <span>Notifications</span>
+                                <button class="clear-notif-btn" id="clearAllNotificationsBtn" style="background: none; border: none; color: var(--accent-blue); font-size: 0.75rem; cursor: pointer; font-weight: 600;">Clear all</button>
+                            </div>
+                            <div class="notif-list" id="notificationsList" style="max-height: 200px; overflow-y: auto; margin-top: 4px;">
+                                <div class="notif-item unread" style="display: flex; gap: 10px; padding: 8px 12px; border-radius: var(--radius-sm); margin-bottom: 4px; background: rgba(0,217,255,0.02); cursor: pointer;">
+                                    <div class="notif-icon-wrap" style="width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(0,217,255,0.1);"><i data-lucide="server" class="text-blue" style="width: 14px; height: 14px; color: var(--accent-blue);"></i></div>
+                                    <div class="notif-content" style="flex: 1;">
+                                        <p class="notif-text" style="font-size: 0.8125rem; line-height: 1.3; color: var(--text-primary);"><strong>prod-server-01</strong> CPU load is 92%</p>
+                                        <span class="notif-time" style="font-size: 0.6875rem; color: var(--text-secondary); display: block; margin-top: 2px;">2m ago</span>
+                                    </div>
+                                </div>
+                                <div class="notif-item unread" style="display: flex; gap: 10px; padding: 8px 12px; border-radius: var(--radius-sm); margin-bottom: 4px; background: rgba(99,102,241,0.02); cursor: pointer;">
+                                    <div class="notif-icon-wrap" style="width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(99,102,241,0.1);"><i data-lucide="zap" class="text-purple" style="width: 14px; height: 14px; color: var(--accent-purple);"></i></div>
+                                    <div class="notif-content" style="flex: 1;">
+                                        <p class="notif-text" style="font-size: 0.8125rem; line-height: 1.3; color: var(--text-primary);">Build deployment for <strong>prod-frontend</strong> completed</p>
+                                        <span class="notif-time" style="font-size: 0.6875rem; color: var(--text-secondary); display: block; margin-top: 2px;">15m ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Avatar / Profile Dropdown -->
+                    <div class="top-nav-profile" style="position: relative;">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop" alt="Alex Rivera Profile Pic" class="top-avatar" id="topAvatarBtn" style="cursor: pointer; width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--border-color); object-fit: cover;">
+                        <div class="dropdown-menu profile-dropdown" id="profileDropdown" style="display: none; position: absolute; top: calc(100% + 8px); right: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); z-index: 100; min-width: 180px; padding: 6px; backdrop-filter: blur(20px);">
+                            <div class="profile-dropdown-header" style="padding: 8px 12px;">
+                                <div class="profile-info-wrap" style="display: flex; flex-direction: column;">
+                                    <strong class="user-display-name" style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary);">Alex Rivera</strong>
+                                    <span class="user-display-email" style="font-size: 0.75rem; color: var(--text-secondary);">alex.rivera@cloudscale.io</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider" style="height: 1px; background: var(--border-color); margin: 6px 0;"></div>
+                            <a href="#settings" class="dropdown-item-link" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer;"><i data-lucide="user" style="width: 14px; height: 14px;"></i> <span>My Profile</span></a>
+                            <a href="#settings" class="dropdown-item-link" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer;"><i data-lucide="settings" style="width: 14px; height: 14px;"></i> <span>Settings</span></a>
+                            <a href="#billing" class="dropdown-item-link" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer;"><i data-lucide="credit-card" style="width: 14px; height: 14px;"></i> <span>Billing</span></a>
+                            <div class="dropdown-divider" style="height: 1px; background: var(--border-color); margin: 6px 0;"></div>
+                            <button class="dropdown-item" id="logoutBtnDropdown" style="display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 12px; border: none; background: none; color: var(--color-danger); text-align: left; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer;"><i data-lucide="log-out" style="width: 14px; height: 14px;"></i> <span>Log Out</span></button>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -839,119 +893,257 @@
 
                 <!-- View: Analytics -->
                 <div id="view-analytics" class="app-view">
-                    <div class="dashboard-header">
+                    <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); margin-bottom: var(--space-4);">
                         <div class="dashboard-title-area">
                             <h1 class="dashboard-title">System Performance &amp; Analytics</h1>
                             <p class="dashboard-subtitle">Real-time telemetry and resource usage tracking</p>
                         </div>
+                        <button class="btn btn-primary" id="exportReportBtn" style="display: flex; align-items: center; gap: 6px;">
+                            <i data-lucide="download"></i>
+                            <span>Export Report</span>
+                        </button>
                     </div>
                     
                     <!-- Analytics Overview Cards -->
-                    <div class="dashboard-grid metrics-grid">
+                    <div class="dashboard-grid metrics-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-6);">
                         <div class="metric-card">
                             <div class="metric-card-header">
                                 <span class="metric-label">Avg Response Time</span>
-                                <div class="metric-icon-wrapper blue-glow">
-                                    <i data-lucide="clock" class="text-blue"></i>
-                                </div>
+                                <div class="metric-icon-wrapper blue-glow"><i data-lucide="clock" class="text-blue"></i></div>
                             </div>
-                            <div class="metric-card-body">
-                                <div class="metric-value-row">
-                                    <h2 class="metric-value">245ms</h2>
-                                    <span class="trend-badge trend-up">
-                                        <i data-lucide="arrow-down-right" style="transform: rotate(180deg);"></i>
-                                        <span>-12.4%</span>
-                                    </span>
-                                </div>
+                            <div class="metric-body" style="margin-top: var(--space-2);">
+                                <h2 class="metric-value">245ms</h2>
+                                <span class="trend-badge trend-down"><i data-lucide="arrow-down-right"></i><span>-12.4%</span></span>
                             </div>
                         </div>
                         <div class="metric-card">
                             <div class="metric-card-header">
-                                <span class="metric-label">Error Rate</span>
-                                <div class="metric-icon-wrapper purple-glow">
-                                    <i data-lucide="alert-octagon" class="text-purple"></i>
-                                </div>
+                                <span class="metric-label">Real-time Visitors</span>
+                                <div class="metric-icon-wrapper purple-glow"><i data-lucide="users" class="text-purple"></i></div>
                             </div>
-                            <div class="metric-card-body">
-                                <div class="metric-value-row">
-                                    <h2 class="metric-value">0.04%</h2>
-                                    <span class="trend-badge trend-down">
-                                        <i data-lucide="arrow-down-right"></i>
-                                        <span>-0.02%</span>
-                                    </span>
-                                </div>
+                            <div class="metric-body" style="margin-top: var(--space-2);">
+                                <h2 class="metric-value">1,428</h2>
+                                <span class="trend-badge trend-up"><i data-lucide="arrow-up-right"></i><span>+8.2%</span></span>
                             </div>
                         </div>
                         <div class="metric-card">
                             <div class="metric-card-header">
-                                <span class="metric-label">Total API Requests</span>
-                                <div class="metric-icon-wrapper blue-glow">
-                                    <i data-lucide="activity" class="text-blue"></i>
-                                </div>
+                                <span class="metric-label">Network Latency</span>
+                                <div class="metric-icon-wrapper blue-glow"><i data-lucide="activity" class="text-blue"></i></div>
                             </div>
-                            <div class="metric-card-body">
-                                <div class="metric-value-row">
-                                    <h2 class="metric-value">1,248,390</h2>
-                                    <span class="trend-badge trend-up">
-                                        <i data-lucide="arrow-up-right"></i>
-                                        <span>+24.1%</span>
-                                    </span>
-                                </div>
+                            <div class="metric-body" style="margin-top: var(--space-2);">
+                                <h2 class="metric-value">14.8ms</h2>
+                                <span class="trend-badge trend-down"><i data-lucide="arrow-down-right"></i><span>-1.5%</span></span>
                             </div>
                         </div>
                         <div class="metric-card">
                             <div class="metric-card-header">
-                                <span class="metric-label">Cache Hit Ratio</span>
-                                <div class="metric-icon-wrapper purple-glow">
-                                    <i data-lucide="zap" class="text-purple"></i>
-                                </div>
+                                <span class="metric-label">Storage Capacity</span>
+                                <div class="metric-icon-wrapper purple-glow"><i data-lucide="hard-drive" class="text-purple"></i></div>
                             </div>
-                            <div class="metric-card-body">
-                                <div class="metric-value-row">
-                                    <h2 class="metric-value">94.2%</h2>
-                                    <span class="trend-badge trend-up">
-                                        <i data-lucide="arrow-up-right"></i>
-                                        <span>+0.8%</span>
-                                    </span>
-                                </div>
+                            <div class="metric-body" style="margin-top: var(--space-2);">
+                                <h2 class="metric-value">78.2%</h2>
+                                <span class="trend-badge trend-up"><i data-lucide="arrow-up-right"></i><span>+2.4%</span></span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Analytics Charts Area -->
-                    <div class="analytics-charts-grid">
-                        <div class="analytics-card">
-                            <div class="analytics-card-header">
-                                <div class="analytics-card-title-group">
-                                    <div class="analytics-icon-wrap">
-                                        <i data-lucide="line-chart" class="text-blue"></i>
+                    <!-- Heatmap and Geo Map Section -->
+                    <div class="analytics-row-grid" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: var(--space-6); margin-bottom: var(--space-6);">
+                        
+                        <!-- Server Load Heatmap -->
+                        <div class="analytics-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
+                            <h3 class="section-title" style="margin-bottom: var(--space-2);">Server Load Heatmap</h3>
+                            <p class="section-subtitle" style="margin-bottom: var(--space-4);">Hourly node compute density over the past 7 days</p>
+                            
+                            <div class="heatmap-container" style="display: flex; flex-direction: column; gap: 4px;">
+                                <!-- Weekdays rows -->
+                                <div style="display: flex; gap: 4px; align-items: center;">
+                                    <span style="font-size: 10px; width: 30px; color: var(--text-secondary);">Mon</span>
+                                    <div style="display: flex; gap: 4px; flex: 1;">
+                                        <div style="background: #22c55e; opacity: 0.2; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.4; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.6; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.8; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #ef4444; opacity: 0.9; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.3; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.5; flex: 1; height: 16px; border-radius: 2px;"></div>
                                     </div>
-                                    <div>
-                                        <h2 class="section-title">Response Time Histograms</h2>
-                                        <p class="section-subtitle">P50, P90, and P99 latency tracking</p>
+                                </div>
+                                <div style="display: flex; gap: 4px; align-items: center;">
+                                    <span style="font-size: 10px; width: 30px; color: var(--text-secondary);">Wed</span>
+                                    <div style="display: flex; gap: 4px; flex: 1;">
+                                        <div style="background: #22c55e; opacity: 0.6; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.8; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.4; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.2; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.5; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.7; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.6; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 4px; align-items: center;">
+                                    <span style="font-size: 10px; width: 30px; color: var(--text-secondary);">Fri</span>
+                                    <div style="display: flex; gap: 4px; flex: 1;">
+                                        <div style="background: #22c55e; opacity: 0.3; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #ef4444; opacity: 0.7; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.6; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.8; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.2; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.4; flex: 1; height: 16px; border-radius: 2px;"></div>
+                                        <div style="background: #22c55e; opacity: 0.9; flex: 1; height: 16px; border-radius: 2px;"></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="chart-canvas-wrapper" style="height: 300px; position: relative;">
+                        </div>
+
+                        <!-- Request Geo Map -->
+                        <div class="analytics-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
+                            <h3 class="section-title" style="margin-bottom: var(--space-2);">Global Request Map</h3>
+                            <p class="section-subtitle" style="margin-bottom: var(--space-4);">Geographic source location of incoming TCP requests</p>
+                            <div style="display: flex; align-items: center; justify-content: center; height: 120px; background: rgba(0,0,0,0.15); border-radius: var(--radius-sm); border: 1px solid var(--border-color); position: relative; overflow: hidden;">
+                                <i data-lucide="globe" style="width: 60px; height: 60px; color: var(--accent-blue); opacity: 0.15;"></i>
+                                <span style="position: absolute; top: 30px; left: 60px; width: 6px; height: 6px; background: var(--accent-blue); border-radius: 50%; box-shadow: 0 0 10px var(--accent-blue);"></span>
+                                <span style="position: absolute; top: 45px; right: 80px; width: 6px; height: 6px; background: var(--accent-purple); border-radius: 50%; box-shadow: 0 0 10px var(--accent-purple);"></span>
+                                <span style="position: absolute; bottom: 40px; left: 120px; width: 6px; height: 6px; background: var(--color-success); border-radius: 50%; box-shadow: 0 0 10px var(--color-success);"></span>
+                                <div style="position: absolute; bottom: 8px; right: 8px; font-size: 9px; color: var(--text-secondary);">Active Regions: 3</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Analytics Charts Area -->
+                    <div class="analytics-charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-6);">
+                        <div class="analytics-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
+                            <h3 class="section-title" style="margin-bottom: var(--space-4);">Response Time Histograms</h3>
+                            <div class="chart-canvas-wrapper" style="height: 220px; position: relative;">
                                 <canvas id="responseTimeChart" aria-label="Response Time Chart" role="img"></canvas>
                             </div>
                         </div>
 
-                        <div class="analytics-card">
-                            <div class="analytics-card-header">
-                                <div class="analytics-card-title-group">
-                                    <div class="analytics-icon-wrap">
-                                        <i data-lucide="bar-chart-3" class="text-purple"></i>
+                        <div class="analytics-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
+                            <h3 class="section-title" style="margin-bottom: var(--space-4);">Traffic Distribution by Endpoint</h3>
+                            <div class="chart-canvas-wrapper" style="height: 220px; position: relative;">
+                                <canvas id="trafficDistributionChart" aria-label="Traffic Distribution Chart" role="img"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Gauges and Breakdowns -->
+                    <div class="analytics-charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-6);">
+                        
+                        <!-- CPU & RAM allocation gauge charts -->
+                        <div class="analytics-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
+                            <h3 class="section-title" style="margin-bottom: var(--space-4);">Resource Breakdown</h3>
+                            <div style="display: flex; gap: var(--space-4); justify-content: space-around;">
+                                <div style="text-align: center; flex: 1;">
+                                    <div class="chart-canvas-wrapper" style="height: 120px; position: relative;">
+                                        <canvas id="cpuBreakdownChart"></canvas>
                                     </div>
-                                    <div>
-                                        <h2 class="section-title">Traffic Distribution by Endpoint</h2>
-                                        <p class="section-subtitle">Hourly total requests processed</p>
+                                    <span style="font-size: var(--text-xs); color: var(--text-secondary); display: block; margin-top: 4px;">CPU (Core Avg)</span>
+                                </div>
+                                <div style="text-align: center; flex: 1;">
+                                    <div class="chart-canvas-wrapper" style="height: 120px; position: relative;">
+                                        <canvas id="memoryAllocChart"></canvas>
+                                    </div>
+                                    <span style="font-size: var(--text-xs); color: var(--text-secondary); display: block; margin-top: 4px;">RAM Utilisation</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Traffic Source Pie Chart -->
+                        <div class="analytics-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
+                            <h3 class="section-title" style="margin-bottom: var(--space-4);">Traffic Sources</h3>
+                            <div class="chart-canvas-wrapper" style="height: 140px; position: relative;">
+                                <canvas id="trafficSourceChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Latency Timeline line chart -->
+                        <div class="analytics-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
+                            <h3 class="section-title" style="margin-bottom: var(--space-4);">Network Latency Timeline</h3>
+                            <div class="chart-canvas-wrapper" style="height: 140px; position: relative;">
+                                <canvas id="latencyTimelineChart"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Top Endpoints and Server Regions Grid -->
+                    <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: var(--space-6); margin-bottom: var(--space-6);">
+                        
+                        <!-- Top Endpoints Table -->
+                        <div class="section-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
+                            <h3 class="section-title" style="margin-bottom: var(--space-4);">Top HTTP Endpoints</h3>
+                            <div class="table-wrapper">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Endpoint Route</th>
+                                            <th>Requests</th>
+                                            <th>Avg Latency</th>
+                                            <th>Error Rate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code style="color: var(--accent-blue); font-size: 11px;">/api/v1/telemetry</code></td>
+                                            <td>640,290</td>
+                                            <td>18ms</td>
+                                            <td style="color: var(--color-success);">0.01%</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code style="color: var(--accent-blue); font-size: 11px;">/api/v1/auth/login</code></td>
+                                            <td>320,115</td>
+                                            <td>124ms</td>
+                                            <td style="color: var(--color-danger);">1.2%</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code style="color: var(--accent-blue); font-size: 11px;">/api/v1/billing/invoice</code></td>
+                                            <td>95,430</td>
+                                            <td>240ms</td>
+                                            <td style="color: var(--color-success);">0.00%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Server Regions and Error Timeline -->
+                        <div style="display: flex; flex-direction: column; gap: var(--space-6);">
+                            
+                            <!-- Server Regions List -->
+                            <div class="section-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
+                                <h3 class="section-title" style="margin-bottom: var(--space-4);">Active Datacenter Regions</h3>
+                                <div style="display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-xs);">
+                                    <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-color);">
+                                        <span style="color: var(--text-primary);">us-east-1 (N. Virginia)</span>
+                                        <span style="font-weight: 700; color: var(--accent-blue);">982,100 req</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-color);">
+                                        <span style="color: var(--text-primary);">eu-west-1 (Ireland)</span>
+                                        <span style="font-weight: 700; color: var(--accent-purple);">195,430 req</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 6px 0;">
+                                        <span style="color: var(--text-primary);">ap-southeast-1 (Singapore)</span>
+                                        <span style="font-weight: 700; color: var(--accent-blue);">70,860 req</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="chart-canvas-wrapper" style="height: 300px; position: relative;">
-                                <canvas id="trafficDistributionChart" aria-label="Traffic Distribution Chart" role="img"></canvas>
+
+                            <!-- Error Events Timeline -->
+                            <div class="section-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
+                                <h3 class="section-title" style="margin-bottom: var(--space-4);">Recent Error Log Events</h3>
+                                <div style="display: flex; flex-direction: column; gap: var(--space-2); font-size: 11px;">
+                                    <div style="color: var(--color-danger); border-left: 2px solid var(--color-danger); padding-left: 8px;">
+                                        <strong>500 Internal Error</strong> on <code>/auth/login</code> (2s ago)
+                                    </div>
+                                    <div style="color: var(--color-warning); border-left: 2px solid var(--color-warning); padding-left: 8px;">
+                                        <strong>429 Rate Limited</strong> on <code>/telemetry</code> (45s ago)
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                     </div>
 
@@ -1028,16 +1220,182 @@
 
                 <!-- View: Projects -->
                 <div id="view-projects" class="app-view">
-                    <div class="dashboard-header">
+                    <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); margin-bottom: var(--space-4);">
                         <div class="dashboard-title-area">
                             <h1 class="dashboard-title">Active Projects</h1>
                             <p class="dashboard-subtitle">Manage code repositories, build releases, and deployment configurations</p>
                         </div>
+                        <div class="project-header-badges" style="display: flex; gap: var(--space-3); flex-wrap: wrap; font-size: var(--text-xs);">
+                            <span class="status-badge" style="display: flex; align-items: center; gap: 6px; background: rgba(34,197,94,0.1); color: var(--color-success); padding: 6px 12px; border-radius: var(--radius-btn); border: 1px solid rgba(34,197,94,0.2);">
+                                <i data-lucide="git-merge" style="width: 14px; height: 14px;"></i>
+                                <span>GitHub Connected</span>
+                            </span>
+                            <span class="status-badge" style="display: flex; align-items: center; gap: 6px; background: rgba(0,217,255,0.1); color: var(--accent-blue); padding: 6px 12px; border-radius: var(--radius-btn); border: 1px solid rgba(0,217,255,0.2);">
+                                <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+                                <span>Region: US-East</span>
+                            </span>
+                            <span class="status-badge" style="display: flex; align-items: center; gap: 6px; background: rgba(99,102,241,0.1); color: var(--accent-purple); padding: 6px 12px; border-radius: var(--radius-btn); border: 1px solid rgba(99,102,241,0.2);">
+                                <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i>
+                                <span>Uptime: 99.98%</span>
+                            </span>
+                        </div>
                     </div>
 
-                    <!-- Projects Grid -->
-                    <div class="projects-grid" id="projectsGrid">
-                        <!-- Loaded dynamically via JS -->
+                    <!-- Search and Filters Bar -->
+                    <div class="projects-filter-bar" style="display: flex; gap: var(--space-3); margin-top: var(--space-4); margin-bottom: var(--space-4); align-items: center; flex-wrap: wrap; background: var(--bg-card); padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                        <div class="search-container" style="flex: 1; min-width: 200px;">
+                            <i data-lucide="search" class="search-icon"></i>
+                            <input type="text" placeholder="Search repositories, commits..." class="search-input" id="projectsSearchInput" style="width: 100%;">
+                        </div>
+                        <select class="form-input" id="projectsFilterDropdown" style="width: 160px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: var(--radius-sm); padding: 8px;">
+                            <option value="all">All Environments</option>
+                            <option value="production">Production</option>
+                            <option value="staging">Staging</option>
+                            <option value="edge">Edge</option>
+                        </select>
+                        <select class="form-input" id="projectsBranchFilter" style="width: 140px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: var(--radius-sm); padding: 8px;">
+                            <option value="all">All Branches</option>
+                            <option value="main">main</option>
+                            <option value="staging">staging</option>
+                        </select>
+                        <button class="btn btn-primary" id="createProjectBtn" style="display: flex; align-items: center; gap: 6px;">
+                            <i data-lucide="plus"></i>
+                            <span>Create Project</span>
+                        </button>
+                    </div>
+
+                    <!-- Main Projects Page Layout Grid -->
+                    <div class="projects-main-layout" style="display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--space-6);">
+                        
+                        <!-- Left Side: Repo Cards, Env Vars, Collaborators -->
+                        <div class="projects-left-col" style="display: flex; flex-direction: column; gap: var(--space-6);">
+                            
+                            <div class="projects-grid" id="projectsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-4);">
+                                <!-- Loaded dynamically via JS -->
+                            </div>
+
+                            <!-- Environment Variables Card -->
+                            <div class="section-card env-vars-card">
+                                <div class="section-card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+                                    <div>
+                                        <h3 class="section-title">Environment Variables</h3>
+                                        <p class="section-subtitle">Shared variables injected into build runtime environment configs</p>
+                                    </div>
+                                    <button class="btn btn-secondary btn-sm" id="addEnvVarBtn" style="padding: 6px 12px !important; font-size: var(--text-xs);"><i data-lucide="plus" style="width: 12px; height: 12px; margin-right: 4px;"></i> Add Variable</button>
+                                </div>
+                                <div class="env-vars-list" style="display: flex; flex-direction: column; gap: var(--space-2);">
+                                    <div class="env-var-row" style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 10px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                                        <div style="display: flex; align-items: center; gap: var(--space-4);">
+                                            <span class="text-mono" style="font-weight: 700; color: var(--accent-blue);">DATABASE_URL</span>
+                                            <span class="text-mono text-muted" style="color: var(--text-secondary);">••••••••••••••••••••••••••••••••</span>
+                                        </div>
+                                        <button class="icon-action-btn" style="background: none; border: none; color: var(--text-secondary); cursor: pointer;"><i data-lucide="eye" style="width: 16px; height: 16px;"></i></button>
+                                    </div>
+                                    <div class="env-var-row" style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 10px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                                        <div style="display: flex; align-items: center; gap: var(--space-4);">
+                                            <span class="text-mono" style="font-weight: 700; color: var(--accent-blue);">JWT_SECRET_KEY</span>
+                                            <span class="text-mono text-muted" style="color: var(--text-secondary);">••••••••••••••••••••••••••••••••</span>
+                                        </div>
+                                        <button class="icon-action-btn" style="background: none; border: none; color: var(--text-secondary); cursor: pointer;"><i data-lucide="eye" style="width: 16px; height: 16px;"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Collaborators Card -->
+                            <div class="section-card collaborators-card">
+                                <h3 class="section-title" style="margin-bottom: var(--space-2);">Active Collaborators</h3>
+                                <p class="section-subtitle" style="margin-bottom: var(--space-4);">Teammates with repository write permissions</p>
+                                <div class="collaborators-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--space-3);">
+                                    <div class="collaborator-item" style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.02); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=80&auto=format&fit=crop" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                                        <div>
+                                            <div style="font-weight: 700; font-size: var(--text-sm); color: var(--text-primary);">Alex Rivera</div>
+                                            <div style="font-size: 10px; color: var(--accent-blue);">Owner / Admin</div>
+                                        </div>
+                                    </div>
+                                    <div class="collaborator-item" style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.02); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                                        <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=80&auto=format&fit=crop" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                                        <div>
+                                            <div style="font-weight: 700; font-size: var(--text-sm); color: var(--text-primary);">Sam Chen</div>
+                                            <div style="font-size: 10px; color: var(--accent-purple);">Lead DevOps</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Side: Pipeline, Timeline, Logs, Release Notes -->
+                        <div class="projects-right-col" style="display: flex; flex-direction: column; gap: var(--space-6);">
+                            
+                            <!-- CI/CD Pipeline & Build Stats -->
+                            <div class="section-card pipeline-card">
+                                <h3 class="section-title" style="margin-bottom: var(--space-2);">CI/CD Pipeline Status</h3>
+                                <p class="section-subtitle" style="margin-bottom: var(--space-4);">Real-time monitoring of running automated pipelines</p>
+                                <div class="pipeline-metrics" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-4);">
+                                    <div style="background: rgba(255,255,255,0.02); padding: var(--space-3); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                                        <div style="font-size: 10px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 4px;">Avg Build Duration</div>
+                                        <strong style="font-size: var(--text-lg); color: var(--text-primary);">54 seconds</strong>
+                                    </div>
+                                    <div style="background: rgba(255,255,255,0.02); padding: var(--space-3); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                                        <div style="font-size: 10px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 4px;">Build Success Rate</div>
+                                        <strong style="font-size: var(--text-lg); color: var(--color-success);">94.8%</strong>
+                                    </div>
+                                </div>
+                                <div class="pipeline-progress-list" style="display: flex; flex-direction: column; gap: var(--space-2);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: var(--text-xs);">
+                                        <span style="color: var(--text-primary);">Pipeline #4810 (prod-frontend)</span>
+                                        <span class="status-pill pill-completed">Passed</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: var(--text-xs);">
+                                        <span style="color: var(--text-primary);">Pipeline #4809 (api-gateway)</span>
+                                        <span class="status-pill pill-running">Running</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Deployment Activity Timeline -->
+                            <div class="section-card timeline-card">
+                                <h3 class="section-title" style="margin-bottom: var(--space-4);">Deployment History Timeline</h3>
+                                <div class="timeline-list" style="position: relative; padding-left: 20px; border-left: 2px solid var(--border-color); display: flex; flex-direction: column; gap: var(--space-4);">
+                                    <div class="timeline-item" style="position: relative;">
+                                        <span class="timeline-dot bg-success" style="position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--color-success);"></span>
+                                        <strong style="font-size: var(--text-xs); color: var(--text-primary); display: block;">v1.2.4 Deployment Succeeded</strong>
+                                        <span style="font-size: 10px; color: var(--text-secondary);">prod-frontend &mdash; 2m ago by Alex Rivera</span>
+                                    </div>
+                                    <div class="timeline-item" style="position: relative;">
+                                        <span class="timeline-dot bg-danger" style="position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--color-danger);"></span>
+                                        <strong style="font-size: var(--text-xs); color: var(--text-primary); display: block;">v1.2.3 Build Failed</strong>
+                                        <span style="font-size: 10px; color: var(--text-secondary);">data-warehouse &mdash; 1h ago by Sam Chen</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Deployment Logs Preview -->
+                            <div class="section-card logs-preview-card">
+                                <h3 class="section-title" style="margin-bottom: var(--space-2);">Deployment Build Logs</h3>
+                                <p class="section-subtitle" style="margin-bottom: var(--space-4);">Active console snapshot of the last docker build</p>
+                                <div class="console-box" style="background: #08090F; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-family: monospace; font-size: 11px; line-height: 1.5; color: #a5b4fc; max-height: 150px; overflow-y: auto;">
+                                    <div>[14:24:02] $ npm run build</div>
+                                    <div>[14:24:04] > next build</div>
+                                    <div>[14:24:08] Creating an optimized production build...</div>
+                                    <div>[14:24:22] Compiled successfully!</div>
+                                    <div>[14:24:23] Route (app)      Size     First Load JS</div>
+                                    <div class="text-success" style="color: var(--color-success);">[14:24:25] Ready for deployment. Pushing to CDN...</div>
+                                </div>
+                            </div>
+
+                            <!-- Release Notes Panel -->
+                            <div class="section-card release-notes-card">
+                                <h3 class="section-title" style="margin-bottom: var(--space-4);">Latest Release Notes</h3>
+                                <div style="font-size: var(--text-xs); line-height: 1.6;">
+                                    <strong style="color: var(--text-primary); display: block; margin-bottom: 2px;">Release v1.2.4:</strong>
+                                    <p style="color: var(--text-secondary); margin-bottom: var(--space-2);">Added advanced socket reconnection handling and polished analytics time range charts performance loads.</p>
+                                    <strong style="color: var(--text-primary); display: block; margin-bottom: 2px;">Release v1.2.3:</strong>
+                                    <p style="color: var(--text-secondary);">Fixed floating point precision duplication bug in real-time server widget updates.</p>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -1079,59 +1437,170 @@
 
                 <!-- View: Billing -->
                 <div id="view-billing" class="app-view">
-                    <div class="dashboard-header">
+                    <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); margin-bottom: var(--space-4);">
                         <div class="dashboard-title-area">
                             <h1 class="dashboard-title">Billing &amp; Subscriptions</h1>
                             <p class="dashboard-subtitle">Manage credit cards, view invoices, and plan details</p>
                         </div>
+                        <button class="btn btn-secondary btn-sm" id="downloadAllInvoicesBtn" style="display: flex; align-items: center; gap: 6px;">
+                            <i data-lucide="download"></i>
+                            <span>Download All Invoices</span>
+                        </button>
                     </div>
 
-                    <div class="billing-content-grid">
-                        <div class="billing-left-col">
-                            <!-- Plan Details Card -->
-                            <div class="section-card billing-plan-card">
-                                <h3 class="billing-card-title">Subscription Overview</h3>
-                                <div class="billing-plan-info">
-                                    <div class="plan-details-text">
-                                        <span class="plan-badge">Enterprise Plan</span>
-                                        <span class="plan-price">$299<span class="price-suffix">/month</span></span>
+                    <!-- Billing Grid Layout -->
+                    <div class="billing-content-grid" style="display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--space-6);">
+                        
+                        <!-- Left Column: Spending Graphs, Plan details, Usage stats -->
+                        <div class="billing-left-col" style="display: flex; flex-direction: column; gap: var(--space-6);">
+                            
+                            <!-- Invoice Summary Widgets Row -->
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-4);">
+                                <div class="metric-card" style="padding: 16px;">
+                                    <div style="font-size: 11px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: var(--space-2);">Estimated Next Payment</div>
+                                    <strong style="font-size: var(--text-xl); color: var(--text-primary);">$299.00</strong>
+                                    <span style="font-size: 10px; color: var(--text-secondary); display: block; margin-top: 4px;">Due on Aug 1, 2026</span>
+                                </div>
+                                <div class="metric-card" style="padding: 16px;">
+                                    <div style="font-size: 11px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: var(--space-2);">Billing Cycle Countdown</div>
+                                    <strong style="font-size: var(--text-xl); color: var(--text-primary);">26 Days Left</strong>
+                                    <div class="progress-track" style="height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; margin-top: 8px; overflow: hidden;">
+                                        <div class="progress-fill fill-blue" style="width: 80%; height: 100%; background: var(--accent-blue);"></div>
                                     </div>
+                                </div>
+                                <div class="metric-card" style="padding: 16px; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div>
+                                        <div style="font-size: 11px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 2px;">Auto-Renew</div>
+                                        <span style="font-size: var(--text-sm); font-weight: 700; color: var(--color-success);">Enabled</span>
+                                    </div>
+                                    <label style="display: flex; align-items: center; gap: 8px; margin-top: 6px; cursor: pointer; font-size: 11px; color: var(--text-secondary);">
+                                        <input type="checkbox" id="autoRenewToggle" checked>
+                                        <span>Toggle auto-renew</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Spending Overview Charts -->
+                            <div class="analytics-charts-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+                                <div class="analytics-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
+                                    <h3 class="section-title" style="margin-bottom: var(--space-4); font-size: var(--text-md) !important;">Monthly Spending Trend</h3>
+                                    <div class="chart-canvas-wrapper" style="height: 180px; position: relative;">
+                                        <canvas id="monthlySpendChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="analytics-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
+                                    <h3 class="section-title" style="margin-bottom: var(--space-4); font-size: var(--text-md) !important;">Annual Spending Overview</h3>
+                                    <div class="chart-canvas-wrapper" style="height: 180px; position: relative;">
+                                        <canvas id="annualSpendChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Resource Usage Progress -->
+                            <div class="section-card billing-plan-card">
+                                <h3 class="billing-card-title" style="margin-bottom: var(--space-4);">Resource Usage Limits</h3>
+                                <div style="display: flex; flex-direction: column; gap: var(--space-4);">
                                     <div class="plan-progress-container">
-                                        <div class="plan-progress-header">
-                                            <span>Current Usage (Compute Hours)</span>
+                                        <div class="plan-progress-header" style="display: flex; justify-content: space-between; font-size: var(--text-sm); margin-bottom: 6px;">
+                                            <span>Compute Allocation</span>
                                             <span>642 hrs / 1,000 hrs</span>
                                         </div>
-                                        <div class="progress-track">
-                                            <div class="progress-fill fill-blue" style="width: 64.2%;"></div>
+                                        <div class="progress-track" style="height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden;">
+                                            <div class="progress-fill fill-blue" style="width: 64.2%; height: 100%; background: var(--accent-blue);"></div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="billing-card-footer" style="display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-md);">
-                                    <button class="btn btn-primary">Upgrade Plan</button>
-                                    <button class="btn btn-secondary">Cancel Subscription</button>
+                                    <div class="plan-progress-container">
+                                        <div class="plan-progress-header" style="display: flex; justify-content: space-between; font-size: var(--text-sm); margin-bottom: 6px;">
+                                            <span>Data Bandwidth</span>
+                                            <span>1.8 TB / 5 TB</span>
+                                        </div>
+                                        <div class="progress-track" style="height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden;">
+                                            <div class="progress-fill fill-purple" style="width: 36%; height: 100%; background: var(--accent-purple);"></div>
+                                        </div>
+                                    </div>
+                                    <div class="plan-progress-container">
+                                        <div class="plan-progress-header" style="display: flex; justify-content: space-between; font-size: var(--text-sm); margin-bottom: 6px;">
+                                            <span>SSD Storage</span>
+                                            <span>184 GB / 250 GB</span>
+                                        </div>
+                                        <div class="progress-track" style="height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden;">
+                                            <div class="progress-fill fill-blue" style="width: 73.6%; height: 100%; background: var(--accent-blue);"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Payment Method Card -->
-                            <div class="section-card billing-payment-card" style="margin-top: var(--spacing-lg);">
-                                <h3 class="billing-card-title">Payment Method</h3>
-                                <div class="card-details-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--spacing-sm);">
-                                    <div class="credit-card-preview" style="display: flex; align-items: center; gap: var(--spacing-md);">
-                                        <i data-lucide="credit-card" class="card-brand-icon" style="color: var(--color-blue); width: 24px; height: 24px;"></i>
-                                        <div class="card-digits" style="display: flex; flex-direction: column;">
-                                            <span style="font-weight: 500;">Visa ending in 4242</span>
-                                            <span class="card-expiry" style="color: var(--color-text-muted); font-size: 0.8125rem;">Expires 12/28</span>
-                                        </div>
+                            <!-- Subscription comparison -->
+                            <div class="section-card plans-comparison-card">
+                                <h3 class="billing-card-title" style="margin-bottom: var(--space-4);">Subscription Comparison</h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+                                    <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px;">
+                                        <h4 style="font-size: var(--text-md); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">Pro Plan</h4>
+                                        <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3);">Best for scaling apps and independent developers.</p>
+                                        <strong style="font-size: var(--text-lg); color: var(--text-primary); display: block; margin-bottom: var(--space-2);">$99/mo</strong>
+                                        <ul style="font-size: 11px; color: var(--text-secondary); padding-left: 14px;">
+                                            <li>250 Compute Hours</li>
+                                            <li>1 TB Bandwidth</li>
+                                            <li>50 GB Storage</li>
+                                        </ul>
                                     </div>
-                                    <button class="btn btn-secondary btn-sm" id="editPaymentBtn">Update</button>
+                                    <div style="background: rgba(0,217,255,0.02); border: 1px solid var(--accent-blue); border-radius: var(--radius-md); padding: 16px; position: relative;">
+                                        <span style="position: absolute; top: 12px; right: 12px; font-size: 9px; padding: 2px 6px; background: var(--accent-blue); color: #000; font-weight: 800; border-radius: 10px;">ACTIVE</span>
+                                        <h4 style="font-size: var(--text-md); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">Enterprise Plan</h4>
+                                        <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3);">Best for large systems and corporate platforms.</p>
+                                        <strong style="font-size: var(--text-lg); color: var(--text-primary); display: block; margin-bottom: var(--space-2);">$299/mo</strong>
+                                        <ul style="font-size: 11px; color: var(--text-secondary); padding-left: 14px;">
+                                            <li>1,000 Compute Hours</li>
+                                            <li>5 TB Bandwidth</li>
+                                            <li>250 GB Storage</li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
 
-                        <!-- Invoices List -->
-                        <div class="billing-right-col">
+                        <!-- Right Column: Payment Details, Invoices -->
+                        <div class="billing-right-col" style="display: flex; flex-direction: column; gap: var(--space-6);">
+                            
+                            <!-- Payment Method Card -->
+                            <div class="section-card billing-payment-card">
+                                <h3 class="billing-card-title" style="margin-bottom: var(--space-4);">Payment Details</h3>
+                                <div class="credit-card-preview" style="display: flex; align-items: center; gap: var(--space-4); background: rgba(255,255,255,0.02); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: var(--space-4);">
+                                    <i data-lucide="credit-card" class="card-brand-icon" style="color: var(--accent-blue); width: 28px; height: 28px;"></i>
+                                    <div class="card-digits" style="display: flex; flex-direction: column; flex: 1;">
+                                        <span style="font-weight: 700; font-size: var(--text-sm);">Visa ending in 4242</span>
+                                        <span class="card-expiry" style="color: var(--text-secondary); font-size: var(--text-xs);">Expires 12/28</span>
+                                    </div>
+                                    <button class="btn btn-secondary btn-sm" id="editPaymentBtn" style="padding: 6px 12px !important; font-size: var(--text-xs);">Update</button>
+                                </div>
+
+                                <!-- Tax info & Address -->
+                                <div style="font-size: var(--text-xs); color: var(--text-secondary); display: flex; flex-direction: column; gap: var(--space-3);">
+                                    <div>
+                                        <label style="display: block; font-weight: 700; color: var(--text-primary); margin-bottom: 2px;">Tax ID</label>
+                                        <span>US-8219045-A</span>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-weight: 700; color: var(--text-primary); margin-bottom: 2px;">Company Billing Address</label>
+                                        <span>Zarix Laboratories LLC,<br>160 Pine Street, San Francisco, CA 94111</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Upgrade recommendations -->
+                            <div class="section-card upgrade-recommendation-card" style="background: rgba(99,102,241,0.05); border: 1px dashed var(--accent-purple); border-radius: var(--radius-xl); padding: var(--space-5);">
+                                <h4 style="font-size: var(--text-md); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2); display: flex; align-items: center; gap: 8px;">
+                                    <i data-lucide="sparkles" style="color: var(--accent-purple); width: 18px; height: 18px;"></i>
+                                    <span>Plan Upgrade Recommended</span>
+                                </h4>
+                                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.5;">Based on your last month compute hours scaling at 92%, we recommend scheduling a free migration consult to upgrade storage bounds to CloudScale Pro+ Unlimited.</p>
+                                <button class="btn btn-primary btn-sm" style="margin-top: var(--space-3); padding: 8px 16px !important; font-size: var(--text-xs);">Schedule Consult</button>
+                            </div>
+
+                            <!-- Invoices List -->
                             <section class="section-card billing-invoices-section">
-                                <h3 class="billing-card-title" style="margin-bottom: var(--spacing-md);">Invoices History</h3>
+                                <h3 class="billing-card-title" style="margin-bottom: var(--space-4);">Invoices History</h3>
                                 <div class="table-wrapper">
                                     <table class="data-table">
                                         <thead>
@@ -1155,36 +1624,72 @@
 
                 <!-- View: Settings -->
                 <div id="view-settings" class="app-view">
-                    <div class="dashboard-header">
+                    <div class="dashboard-header" style="margin-bottom: var(--space-4);">
                         <div class="dashboard-title-area">
-                            <h1 class="dashboard-title">System Settings</h1>
-                            <p class="dashboard-subtitle">Adjust system parameters, profiles, and API access keys</p>
+                            <h1 class="dashboard-title">Account Settings</h1>
+                            <p class="dashboard-subtitle">Adjust system parameters, security tokens, preferences, and workspaces</p>
                         </div>
                     </div>
 
-                    <div class="settings-layout-grid">
-                        <!-- Navigation Tabs (Vertical on desktop) -->
-                        <div class="settings-sidebar-nav">
-                            <button class="settings-nav-item active" data-settings-tab="profile">
-                                <i data-lucide="user"></i>
+                    <div class="settings-layout-grid" style="display: grid; grid-template-columns: 240px 1fr; gap: var(--space-6);">
+                        <!-- Navigation Tabs (Vertical) -->
+                        <div class="settings-sidebar-nav" style="display: flex; flex-direction: column; gap: 4px; background: var(--bg-sidebar); padding: 8px; border-radius: var(--radius-md); border: 1px solid var(--border-color); height: fit-content;">
+                            <button class="settings-nav-item active" data-settings-tab="profile" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: none; border: none; color: var(--text-secondary); text-align: left; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600;">
+                                <i data-lucide="user" style="width: 16px; height: 16px;"></i>
                                 <span>Profile Details</span>
                             </button>
-                            <button class="settings-nav-item" data-settings-tab="notifications">
-                                <i data-lucide="bell"></i>
+                            <button class="settings-nav-item" data-settings-tab="security" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: none; border: none; color: var(--text-secondary); text-align: left; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600;">
+                                <i data-lucide="shield" style="width: 16px; height: 16px;"></i>
+                                <span>Security &amp; Auth</span>
+                            </button>
+                            <button class="settings-nav-item" data-settings-tab="notifications" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: none; border: none; color: var(--text-secondary); text-align: left; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600;">
+                                <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
                                 <span>Notifications</span>
                             </button>
-                            <button class="settings-nav-item" data-settings-tab="api-keys">
-                                <i data-lucide="key"></i>
-                                <span>API Credentials</span>
+                            <button class="settings-nav-item" data-settings-tab="billing-prefs" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: none; border: none; color: var(--text-secondary); text-align: left; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600;">
+                                <i data-lucide="credit-card" style="width: 16px; height: 16px;"></i>
+                                <span>Billing Preferences</span>
+                            </button>
+                            <button class="settings-nav-item" data-settings-tab="workspace" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: none; border: none; color: var(--text-secondary); text-align: left; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600;">
+                                <i data-lucide="briefcase" style="width: 16px; height: 16px;"></i>
+                                <span>Workspace Management</span>
+                            </button>
+                            <button class="settings-nav-item" data-settings-tab="api-keys" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: none; border: none; color: var(--text-secondary); text-align: left; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600;">
+                                <i data-lucide="key" style="width: 16px; height: 16px;"></i>
+                                <span>API &amp; Webhooks</span>
+                            </button>
+                            <button class="settings-nav-item" data-settings-tab="connected-apps" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: none; border: none; color: var(--text-secondary); text-align: left; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600;">
+                                <i data-lucide="link" style="width: 16px; height: 16px;"></i>
+                                <span>Connected Integrations</span>
+                            </button>
+                            <button class="settings-nav-item" data-settings-tab="appearance" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: none; border: none; color: var(--text-secondary); text-align: left; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600;">
+                                <i data-lucide="palette" style="width: 16px; height: 16px;"></i>
+                                <span>Theme &amp; Style</span>
+                            </button>
+                            <button class="settings-nav-item" data-settings-tab="sessions" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: none; border: none; color: var(--text-secondary); text-align: left; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600;">
+                                <i data-lucide="cpu" style="width: 16px; height: 16px;"></i>
+                                <span>Active Sessions</span>
+                            </button>
+                            <button class="settings-nav-item" data-settings-tab="privacy" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: none; border: none; color: var(--text-secondary); text-align: left; font-size: var(--text-sm); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600;">
+                                <i data-lucide="eye-off" style="width: 16px; height: 16px;"></i>
+                                <span>Privacy &amp; Danger</span>
                             </button>
                         </div>
 
                         <!-- Settings Content Panels -->
-                        <div class="settings-content-pane">
+                        <div class="settings-content-pane" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-6); min-height: 400px;">
+                            
                             <!-- Panel 1: Profile -->
                             <div class="settings-panel active" id="settings-panel-profile">
-                                <h3 class="settings-panel-title">Profile Settings</h3>
-                                <form id="profileSettingsForm" style="margin-top: var(--spacing-md);">
+                                <h3 class="settings-panel-title" style="margin-bottom: var(--space-4);">Profile Settings</h3>
+                                <div style="display: flex; gap: var(--space-4); align-items: center; margin-bottom: var(--space-4); background: rgba(255,255,255,0.02); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                                    <div>
+                                        <button class="btn btn-secondary btn-sm" style="padding: 6px 12px !important; font-size: var(--text-xs); margin-bottom: 4px;">Upload New Avatar</button>
+                                        <div style="font-size: 10px; color: var(--text-secondary);">Max size 2MB. Format JPG, PNG.</div>
+                                    </div>
+                                </div>
+                                <form id="profileSettingsForm">
                                     <div class="form-group-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
                                         <div class="form-group">
                                             <label for="profileName" class="form-label">Full Name</label>
@@ -1195,56 +1700,95 @@
                                             <input type="email" id="profileEmail" class="form-input" value="alex.rivera@cloudscale.io">
                                         </div>
                                     </div>
-                                    <div class="form-group" style="margin-top: var(--spacing-md);">
-                                        <label for="profileAvatar" class="form-label">Profile Avatar URL</label>
-                                        <input type="text" id="profileAvatar" class="form-input" value="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop">
-                                    </div>
-                                    <div class="form-group" style="margin-top: var(--spacing-md);">
-                                        <label for="profileRole" class="form-label">System Role</label>
-                                        <input type="text" id="profileRole" class="form-input" value="Administrator" disabled>
-                                    </div>
                                     <button type="submit" class="btn btn-primary" style="margin-top: var(--spacing-lg);">Save Profile</button>
                                 </form>
                             </div>
 
-                            <!-- Panel 2: Notifications -->
-                            <div class="settings-panel" id="settings-panel-notifications">
-                                <h3 class="settings-panel-title">Notification Configuration</h3>
-                                <form id="notificationSettingsForm" style="margin-top: var(--spacing-md);">
-                                    <div class="checkbox-group" style="display: flex; flex-direction: column; gap: var(--spacing-md);">
-                                        <label class="checkbox-label" style="display: flex; align-items: flex-start; gap: var(--spacing-md); cursor: pointer;">
-                                            <input type="checkbox" id="notifEmail" checked style="margin-top: 4px;">
-                                            <span class="checkbox-text-wrap">
-                                                <strong style="display: block;">Email Notifications</strong>
-                                                <span class="checkbox-desc" style="font-size: 0.8125rem; color: var(--color-text-muted);">Send weekly activity reports and critical threshold alerts</span>
-                                            </span>
-                                        </label>
-                                        <label class="checkbox-label" style="display: flex; align-items: flex-start; gap: var(--spacing-md); cursor: pointer;">
-                                            <input type="checkbox" id="notifSlack" checked style="margin-top: 4px;">
-                                            <span class="checkbox-text-wrap">
-                                                <strong style="display: block;">Slack Integration Alerts</strong>
-                                                <span class="checkbox-desc" style="font-size: 0.8125rem; color: var(--color-text-muted);">Post real-time high-load warning triggers to slack channel</span>
-                                            </span>
-                                        </label>
-                                        <label class="checkbox-label" style="display: flex; align-items: flex-start; gap: var(--spacing-md); cursor: pointer;">
-                                            <input type="checkbox" id="notifPush" style="margin-top: 4px;">
-                                            <span class="checkbox-text-wrap">
-                                                <strong style="display: block;">Browser Push Notifications</strong>
-                                                <span class="checkbox-desc" style="font-size: 0.8125rem; color: var(--color-text-muted);">Instant banner popups on server reboots or build failures</span>
-                                            </span>
-                                        </label>
+                            <!-- Panel 2: Security -->
+                            <div class="settings-panel" id="settings-panel-security">
+                                <h3 class="settings-panel-title" style="margin-bottom: var(--space-4);">Security &amp; Credentials</h3>
+                                <form id="passwordSettingsForm" style="display: flex; flex-direction: column; gap: var(--space-3); margin-bottom: var(--space-6);">
+                                    <div class="form-group">
+                                        <label class="form-label">Current Password</label>
+                                        <input type="password" class="form-input" placeholder="••••••••">
                                     </div>
-                                    <button type="submit" class="btn btn-primary" style="margin-top: var(--spacing-lg);">Save Preferences</button>
+                                    <div class="form-group">
+                                        <label class="form-label">New Password</label>
+                                        <input type="password" class="form-input" placeholder="••••••••">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Update Password</button>
+                                </form>
+                                <div style="border-top: 1px solid var(--border-color); padding-top: var(--space-4);">
+                                    <h4 style="font-size: var(--text-md); font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Two-Factor Authentication (2FA)</h4>
+                                    <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3);">Secure your console account with a secondary mobile device verification token.</p>
+                                    <button class="btn btn-secondary btn-sm" style="padding: 8px 16px !important; font-size: var(--text-xs);">Configure Authenticator App</button>
+                                </div>
+                            </div>
+
+                            <!-- Panel 3: Notifications -->
+                            <div class="settings-panel" id="settings-panel-notifications">
+                                <h3 class="settings-panel-title" style="margin-bottom: var(--space-4);">Notification Routing</h3>
+                                <form id="notificationSettingsForm" style="display: flex; flex-direction: column; gap: var(--space-4);">
+                                    <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+                                        <input type="checkbox" checked style="margin-top: 4px;">
+                                        <div>
+                                            <strong style="display: block; font-size: var(--text-sm); color: var(--text-primary);">Email Billing Alerts</strong>
+                                            <span style="font-size: var(--text-xs); color: var(--text-secondary);">Receive warnings when compute budget approaches limits.</span>
+                                        </div>
+                                    </label>
+                                    <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+                                        <input type="checkbox" checked style="margin-top: 4px;">
+                                        <div>
+                                            <strong style="display: block; font-size: var(--text-sm); color: var(--text-primary);">Critical Infrastructure Pushes</strong>
+                                            <span style="font-size: var(--text-xs); color: var(--text-secondary);">Push notification alerts on mobile/web when nodes go offline.</span>
+                                        </div>
+                                    </label>
+                                    <button type="submit" class="btn btn-primary">Save Rules</button>
                                 </form>
                             </div>
 
-                            <!-- Panel 3: API Keys -->
+                            <!-- Panel 4: Billing Preferences -->
+                            <div class="settings-panel" id="settings-panel-billing-prefs">
+                                <h3 class="settings-panel-title" style="margin-bottom: var(--space-4);">Billing Preferences</h3>
+                                <form style="display: flex; flex-direction: column; gap: var(--space-3);">
+                                    <div class="form-group">
+                                        <label class="form-label">Billing Notifications Email</label>
+                                        <input type="email" class="form-input" value="finance@zarixlabs.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Monthly Spending Threshold Alert ($)</label>
+                                        <input type="number" class="form-input" value="350">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Save Preferences</button>
+                                </form>
+                            </div>
+
+                            <!-- Panel 5: Workspace -->
+                            <div class="settings-panel" id="settings-panel-workspace">
+                                <h3 class="settings-panel-title" style="margin-bottom: var(--space-4);">Workspace Management</h3>
+                                <form style="display: flex; flex-direction: column; gap: var(--space-3);">
+                                    <div class="form-group">
+                                        <label class="form-label">Workspace Display Name</label>
+                                        <input type="text" class="form-input" value="Zarix Labs">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Workspace Subdomain Slug</label>
+                                        <div style="display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden;">
+                                            <span style="padding: 8px 12px; font-size: var(--text-xs); color: var(--text-secondary); background: rgba(255,255,255,0.03); border-right: 1px solid var(--border-color);">https://cloudscale.io/</span>
+                                            <input type="text" class="form-input" value="zarixlabs" style="border: none; background: none; flex: 1;">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Save Workspace</button>
+                                </form>
+                            </div>
+
+                            <!-- Panel 6: API & Webhooks -->
                             <div class="settings-panel" id="settings-panel-api-keys">
                                 <h3 class="settings-panel-title">API Authentication Credentials</h3>
                                 <p class="settings-panel-desc" style="color: var(--color-text-muted); margin-bottom: var(--spacing-md); font-size: 0.875rem;">Use these credential keys to query the CloudScale ingestion engine programmatically.</p>
                                 <div class="api-key-container" style="margin-top: var(--spacing-md);">
                                     <label class="form-label" style="display: block; margin-bottom: var(--spacing-xs);">Active API Key</label>
-                                                                   <div class="api-key-input-row" style="display: flex; gap: var(--spacing-sm);">
+                                    <div class="api-key-input-row" style="display: flex; gap: var(--spacing-sm);">
                                         <input type="password" id="apiKeyVal" class="form-input text-mono" value="sk_live_placeholder_key_not_real_12345" readonly style="flex: 1;">
                                         <button class="btn btn-secondary" id="toggleApiKeyBtn" title="Show Key" style="padding: 0 12px; display: flex; align-items: center; justify-content: center;">
                                             <i data-lucide="eye"></i>
@@ -1255,61 +1799,257 @@
                                     </div>
                                     <button class="btn btn-danger btn-sm" id="regenerateApiKeyBtn" style="margin-top: var(--spacing-md);">Regenerate Credentials</button>
                                 </div>
+                                <div style="margin-top: var(--space-6); border-top: 1px solid var(--border-color); padding-top: var(--space-4);">
+                                    <h4 style="font-size: var(--text-md); font-weight: 700; color: var(--text-primary); margin-bottom: 2px;">Webhook Endpoints</h4>
+                                    <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-4);">Push real-time system outage triggers directly to your app server hooks.</p>
+                                    <div style="display: flex; gap: 8px; align-items: center; background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                                        <code style="color: var(--accent-blue); font-size: 11px; flex: 1;">https://api.zarixlabs.com/hooks/cloudscale-receiver</code>
+                                        <span class="status-pill pill-completed" style="font-size: 9px; padding: 2px 6px;">Active</span>
+                                    </div>
+                                </div>
                             </div>
+
+                            <!-- Panel 7: Connected Integrations -->
+                            <div class="settings-panel" id="settings-panel-connected-apps">
+                                <h3 class="settings-panel-title" style="margin-bottom: var(--space-4);">Connected Integrations</h3>
+                                <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <i data-lucide="github" style="width: 24px; height: 24px; color: var(--text-primary);"></i>
+                                            <div>
+                                                <strong style="display: block; font-size: var(--text-sm); color: var(--text-primary);">GitHub Organization</strong>
+                                                <span style="font-size: var(--text-xs); color: var(--text-secondary);">Sync commits, deploys, and issues.</span>
+                                            </div>
+                                        </div>
+                                        <span class="status-pill pill-completed">Connected</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <i data-lucide="slack" style="width: 24px; height: 24px; color: #E01E5A;"></i>
+                                            <div>
+                                                <strong style="display: block; font-size: var(--text-sm); color: var(--text-primary);">Slack Workspace</strong>
+                                                <span style="font-size: var(--text-xs); color: var(--text-secondary);">Post deployment logs to channels.</span>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-secondary btn-sm" style="padding: 6px 12px !important; font-size: var(--text-xs);">Connect</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Panel 8: Theme & Style -->
+                            <div class="settings-panel" id="settings-panel-appearance">
+                                <h3 class="settings-panel-title" style="margin-bottom: var(--space-4);">Appearance Preferences</h3>
+                                <form style="display: flex; flex-direction: column; gap: var(--space-4);">
+                                    <div class="form-group">
+                                        <label class="form-label">Active Theme Mode</label>
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px;">
+                                            <div style="border: 2px solid var(--accent-blue); padding: 16px; border-radius: var(--radius-md); text-align: center; cursor: pointer; background: rgba(0,217,255,0.02);">
+                                                <i data-lucide="moon" style="width: 24px; height: 24px; color: var(--accent-blue); margin-bottom: 4px;"></i>
+                                                <span style="display: block; font-size: var(--text-xs); font-weight: 700; color: var(--text-primary);">Dark Space Theme</span>
+                                            </div>
+                                            <div style="border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); text-align: center; cursor: pointer;">
+                                                <i data-lucide="sun" style="width: 24px; height: 24px; color: var(--text-secondary); margin-bottom: 4px;"></i>
+                                                <span style="display: block; font-size: var(--text-xs); color: var(--text-secondary);">Light Classic Theme</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+                                        <div class="form-group">
+                                            <label class="form-label">System Language</label>
+                                            <select class="form-input">
+                                                <option selected>English (United States)</option>
+                                                <option>Español (España)</option>
+                                                <option>Français (France)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Default Timezone</label>
+                                            <select class="form-input">
+                                                <option selected>UTC / GMT (+00:00)</option>
+                                                <option>PST / PDT (-08:00)</option>
+                                                <option>IST (+05:30)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Panel 9: Active Sessions -->
+                            <div class="settings-panel" id="settings-panel-sessions">
+                                <h3 class="settings-panel-title" style="margin-bottom: var(--space-4);">Active Devices &amp; Sessions</h3>
+                                <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <i data-lucide="laptop" style="width: 24px; height: 24px; color: var(--accent-blue);"></i>
+                                            <div>
+                                                <strong style="display: block; font-size: var(--text-sm); color: var(--text-primary);">Chrome on macOS</strong>
+                                                <span style="font-size: var(--text-xs); color: var(--text-secondary);">IP: 192.168.1.45 &mdash; Active Now</span>
+                                            </div>
+                                        </div>
+                                        <span style="font-size: 10px; padding: 4px 8px; background: rgba(0,217,255,0.1); color: var(--accent-blue); border-radius: var(--radius-sm); font-weight: 700;">CURRENT</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <i data-lucide="smartphone" style="width: 24px; height: 24px; color: var(--text-secondary);"></i>
+                                            <div>
+                                                <strong style="display: block; font-size: var(--text-sm); color: var(--text-primary);">Safari on iPhone 15 Pro</strong>
+                                                <span style="font-size: var(--text-xs); color: var(--text-secondary);">IP: 10.0.4.90 &mdash; 4 hours ago</span>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-secondary btn-sm" style="padding: 6px 12px !important; font-size: var(--text-xs); color: var(--color-danger);">Revoke</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Panel 10: Privacy & Danger Zone -->
+                            <div class="settings-panel" id="settings-panel-privacy">
+                                <h3 class="settings-panel-title" style="margin-bottom: var(--space-4);">Privacy Preferences</h3>
+                                <div style="display: flex; flex-direction: column; gap: var(--space-4); margin-bottom: var(--space-6);">
+                                    <div>
+                                        <strong style="display: block; font-size: var(--text-sm); color: var(--text-primary); margin-bottom: 2px;">Export Local Ingested Telemetry</strong>
+                                        <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-2);">Download a JSON package of your server performance indexes.</p>
+                                        <button class="btn btn-secondary btn-sm" style="padding: 8px 16px !important; font-size: var(--text-xs);">Export System Data</button>
+                                    </div>
+                                </div>
+                                <div style="border-top: 1px solid rgba(239,68,68,0.2); padding-top: var(--space-4); background: rgba(239,68,68,0.02); padding: 16px; border-radius: var(--radius-md); border: 1px solid rgba(239,68,68,0.15);">
+                                    <h4 style="font-size: var(--text-md); font-weight: 700; color: var(--color-danger); margin-bottom: 2px;">Danger Zone</h4>
+                                    <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3);">Permanently delete this cloud tenant space workspace and shut down all nodes. This action is irreversible.</p>
+                                    <button class="btn btn-primary" style="background: var(--color-danger) !important; color: #fff !important; font-size: var(--text-xs); padding: 8px 16px !important;">Delete Entire Account</button>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
 
                 <!-- View: Help -->
                 <div id="view-help" class="app-view">
-                    <div class="dashboard-header">
+                    <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); margin-bottom: var(--space-4);">
                         <div class="dashboard-title-area">
                             <h1 class="dashboard-title">Help &amp; Documentation Center</h1>
                             <p class="dashboard-subtitle">Find answers to frequently asked questions or file a support ticket</p>
                         </div>
+                        <div class="system-status-indicator" style="display: flex; align-items: center; gap: 8px; background: rgba(34,197,94,0.1); color: var(--color-success); padding: 8px 16px; border-radius: var(--radius-btn); border: 1px solid rgba(34,197,94,0.2); font-size: var(--text-xs); font-weight: 700;">
+                            <span style="width: 8px; height: 8px; background: var(--color-success); border-radius: 50%; display: inline-block; animation: pulse 2s infinite;"></span>
+                            <span>All Systems Operational</span>
+                        </div>
                     </div>
 
-                    <div class="help-content-grid">
-                        <!-- FAQ Accordion -->
-                        <div class="help-left-col">
+                    <!-- Doc Search bar -->
+                    <div class="search-documentation-bar" style="margin-bottom: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md);">
+                        <div class="search-container" style="max-width: 600px; margin: 0 auto; width: 100%;">
+                            <i data-lucide="search" class="search-icon"></i>
+                            <input type="text" placeholder="Search documentation, guides, or API resources..." class="search-input" id="helpSearchInput" style="width: 100%;">
+                        </div>
+                    </div>
+
+                    <!-- Guides & Tutorials grid -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-6);">
+                        
+                        <!-- Knowledge Base -->
+                        <div class="analytics-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
+                            <h4 style="font-weight: 700; font-size: var(--text-md); color: var(--text-primary); margin-bottom: var(--space-2); display: flex; align-items: center; gap: 6px;"><i data-lucide="book-open" style="color: var(--accent-blue);"></i> Popular Articles</h4>
+                            <ul style="font-size: var(--text-xs); color: var(--text-secondary); display: flex; flex-direction: column; gap: var(--space-2); padding-left: var(--space-3);">
+                                <li><a href="#" style="color: var(--text-secondary); text-decoration: none;">Getting Started with CloudScale</a></li>
+                                <li><a href="#" style="color: var(--text-secondary); text-decoration: none;">Configuring Webhooks and Alert Channels</a></li>
+                                <li><a href="#" style="color: var(--text-secondary); text-decoration: none;">Generating Ingestion API Keys</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Video Tutorials -->
+                        <div class="analytics-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
+                            <h4 style="font-weight: 700; font-size: var(--text-md); color: var(--text-primary); margin-bottom: var(--space-2); display: flex; align-items: center; gap: 6px;"><i data-lucide="video" style="color: var(--accent-purple);"></i> Video Tutorials</h4>
+                            <ul style="font-size: var(--text-xs); color: var(--text-secondary); display: flex; flex-direction: column; gap: var(--space-2); padding-left: var(--space-3);">
+                                <li><a href="#" style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 4px;"><i data-lucide="play-circle" style="width: 12px; height: 12px;"></i> Console Walkthrough</a></li>
+                                <li><a href="#" style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 4px;"><i data-lucide="play-circle" style="width: 12px; height: 12px;"></i> Docker Cluster Scaling</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Announcements / Release Notes -->
+                        <div class="analytics-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-5);">
+                            <h4 style="font-weight: 700; font-size: var(--text-md); color: var(--text-primary); margin-bottom: var(--space-2); display: flex; align-items: center; gap: 6px;"><i data-lucide="megaphone" style="color: var(--accent-blue);"></i> Release Announcements</h4>
+                            <div style="font-size: var(--text-xs); color: var(--text-secondary);">
+                                <strong style="color: var(--text-primary);">Release v2.1.0 &mdash; Jul 2, 2026</strong>
+                                <p style="margin-top: 2px;">Introduced multi-workspace selector and advanced billing spending analysis charts.</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="help-content-grid" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: var(--space-6);">
+                        
+                        <!-- FAQ Accordion & Ticket History -->
+                        <div class="help-left-col" style="display: flex; flex-direction: column; gap: var(--space-6);">
+                            
+                            <!-- FAQ Accordion -->
                             <section class="section-card">
-                                <h3 class="section-title" style="margin-bottom: var(--spacing-md);">Frequently Asked Questions</h3>
+                                <h3 class="section-title" style="margin-bottom: var(--space-4);">Interactive FAQ</h3>
                                 <div class="faq-accordion">
                                     <div class="faq-item">
-                                        <button class="faq-trigger" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-md) 0; background: none; border: none; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--color-text); font-weight: 600; cursor: pointer; text-align: left;">
+                                        <button class="faq-trigger" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-md) 0; background: none; border: none; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-primary); font-weight: 600; cursor: pointer; text-align: left;">
                                             <span>How do I link a new GitHub repository?</span>
                                             <i data-lucide="chevron-down" class="faq-icon" style="transition: transform 0.2s;"></i>
                                         </button>
                                         <div class="faq-panel" style="max-height: 0; overflow: hidden; transition: max-height 0.25s ease-out; padding-right: var(--spacing-md);">
-                                            <p style="padding: var(--spacing-sm) 0; color: var(--color-text-muted); font-size: 0.875rem; line-height: 1.5;">Navigate to the <strong>Projects</strong> tab, link your GitHub organization, and choose the target repository to deploy. The dashboard automatically sets up git hooks for deploy triggers.</p>
+                                            <p style="padding: var(--spacing-sm) 0; color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5;">Navigate to the <strong>Projects</strong> tab, link your GitHub organization, and choose the target repository to deploy. The dashboard automatically sets up git hooks for deploy triggers.</p>
                                         </div>
                                     </div>
                                     <div class="faq-item">
-                                        <button class="faq-trigger" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-md) 0; background: none; border: none; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--color-text); font-weight: 600; cursor: pointer; text-align: left;">
+                                        <button class="faq-trigger" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-md) 0; background: none; border: none; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-primary); font-weight: 600; cursor: pointer; text-align: left;">
                                             <span>What causes a 'High Load' server warning state?</span>
                                             <i data-lucide="chevron-down" class="faq-icon" style="transition: transform 0.2s;"></i>
                                         </button>
                                         <div class="faq-panel" style="max-height: 0; overflow: hidden; transition: max-height 0.25s ease-out; padding-right: var(--spacing-md);">
-                                            <p style="padding: var(--spacing-sm) 0; color: var(--color-text-muted); font-size: 0.875rem; line-height: 1.5;">A server enters the warning state when sustained CPU or RAM usage averages above 85% for more than 5 minutes. Consider scaling vertically or adding replicas.</p>
+                                            <p style="padding: var(--spacing-sm) 0; color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5;">A server enters the warning state when sustained CPU or RAM usage averages above 85% for more than 5 minutes. Consider scaling vertically or adding replicas.</p>
                                         </div>
                                     </div>
                                     <div class="faq-item">
-                                        <button class="faq-trigger" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-md) 0; background: none; border: none; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--color-text); font-weight: 600; cursor: pointer; text-align: left;">
+                                        <button class="faq-trigger" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-md) 0; background: none; border: none; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-primary); font-weight: 600; cursor: pointer; text-align: left;">
                                             <span>How can I regenerate API credentials safely?</span>
                                             <i data-lucide="chevron-down" class="faq-icon" style="transition: transform 0.2s;"></i>
                                         </button>
                                         <div class="faq-panel" style="max-height: 0; overflow: hidden; transition: max-height 0.25s ease-out; padding-right: var(--spacing-md);">
-                                            <p style="padding: var(--spacing-sm) 0; color: var(--color-text-muted); font-size: 0.875rem; line-height: 1.5;">Under <strong>Settings</strong> > <strong>API Credentials</strong>, click <strong>Regenerate Credentials</strong>. Note that this immediately invalidates the previous token key, and any existing external scripts using it will fail.</p>
+                                            <p style="padding: var(--spacing-sm) 0; color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5;">Under <strong>Settings</strong> > <strong>API Credentials</strong>, click <strong>Regenerate Credentials</strong>. Note that this immediately invalidates the previous token key, and any existing external scripts using it will fail.</p>
                                         </div>
                                     </div>
                                 </div>
                             </section>
+
+                            <!-- Ticket History -->
+                            <section class="section-card">
+                                <h3 class="section-title" style="margin-bottom: var(--space-4);">Ticket History</h3>
+                                <div class="ticket-history-list" id="ticketHistoryList" style="display: flex; flex-direction: column; gap: var(--space-2);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: var(--text-xs);">
+                                        <div>
+                                            <strong style="color: var(--text-primary);">#TC-8012: Slow build execution</strong>
+                                            <span style="display: block; color: var(--text-secondary); margin-top: 2px;">Submitted yesterday &mdash; Low severity</span>
+                                        </div>
+                                        <span class="status-pill pill-completed" style="font-size: 9px; padding: 2px 6px;">Resolved</span>
+                                    </div>
+                                </div>
+                            </section>
+
                         </div>
 
-                        <!-- Ticket Submission Form -->
-                        <div class="help-right-col">
+                        <!-- Ticket Submission Form & Priority Support -->
+                        <div class="help-right-col" style="display: flex; flex-direction: column; gap: var(--space-6);">
+                            
+                            <!-- Priority Support Card -->
+                            <div class="section-card priority-support-card" style="background: rgba(99,102,241,0.05); border: 1px dashed var(--accent-purple); border-radius: var(--radius-xl); padding: var(--space-5);">
+                                <h4 style="font-size: var(--text-md); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2); display: flex; align-items: center; gap: 8px;">
+                                    <i data-lucide="sparkles" style="color: var(--accent-purple); width: 18px; height: 18px;"></i>
+                                    <span>Priority Support Live Chat</span>
+                                </h4>
+                                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.5; margin-bottom: var(--space-3);">As an Enterprise Plan customer, you get direct access to DevOps support engineers. Avg response time: under 5 minutes.</p>
+                                <div style="display: flex; gap: var(--space-2);">
+                                    <button class="btn btn-primary btn-sm" id="startLiveChatBtn" style="padding: 6px 12px !important; font-size: var(--text-xs); flex: 1;">Start Live Chat</button>
+                                    <a href="mailto:support@cloudscale.io" class="btn btn-secondary btn-sm" style="padding: 6px 12px !important; font-size: var(--text-xs); display: flex; align-items: center; justify-content: center; gap: 4px; text-decoration: none;">Email Support</a>
+                                </div>
+                            </div>
+
+                            <!-- Ticket Submission Form -->
                             <section class="section-card">
-                                <h3 class="section-title" style="margin-bottom: var(--spacing-md);">File Support Ticket</h3>
+                                <h3 class="section-title" style="margin-bottom: var(--space-4);">File Support Ticket</h3>
                                 <form id="supportTicketForm">
                                     <div class="form-group">
                                         <label for="ticketSubject" class="form-label">Issue Subject</label>
@@ -1331,6 +2071,7 @@
                                     <button type="submit" class="btn btn-primary" style="margin-top: var(--spacing-lg);">Submit Ticket</button>
                                 </form>
                             </section>
+
                         </div>
                     </div>
                 </div>
@@ -1415,6 +2156,89 @@
                     <button type="submit" class="btn btn-primary">Send Invitation</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Command Palette Modal -->
+    <div class="command-palette-backdrop" id="commandPalette" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(8,9,15,0.75); backdrop-filter: blur(12px); z-index: 1000; align-items: flex-start; justify-content: center; padding-top: 10vh;">
+        <div class="command-palette-container" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); width: 100%; max-width: 600px; box-shadow: var(--shadow-lg); overflow: hidden; display: flex; flex-direction: column;">
+            <div class="command-palette-header" style="display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color); gap: 12px;">
+                <i data-lucide="search" style="color: var(--text-secondary); width: 20px; height: 20px;"></i>
+                <input type="text" id="commandPaletteInput" placeholder="Search pages, actions, settings..." autocomplete="off" style="flex: 1; background: none; border: none; color: var(--text-primary); font-size: var(--text-md); outline: none;">
+                <span class="command-palette-esc" style="font-size: 10px; padding: 2px 6px; border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-secondary);">ESC</span>
+            </div>
+            <div class="command-palette-results" id="commandPaletteResults" style="max-height: 350px; overflow-y: auto; padding: 12px 8px;">
+                <div class="command-group" style="margin-bottom: var(--space-4);">
+                    <div class="command-group-title" style="padding: 4px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.05em;">Pages Navigation</div>
+                    <div class="command-item active" data-action="nav" data-target="dashboard" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: var(--radius-sm); color: var(--text-primary); cursor: pointer; transition: background 0.15s;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i data-lucide="layout-dashboard" style="width: 16px; height: 16px; color: var(--accent-blue);"></i>
+                            <span style="font-size: var(--text-sm);">Go to Dashboard</span>
+                        </div>
+                        <kbd style="font-size: 10px; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-color); color: var(--text-secondary);">G D</kbd>
+                    </div>
+                    <div class="command-item" data-action="nav" data-target="analytics" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: var(--radius-sm); color: var(--text-secondary); cursor: pointer; transition: background 0.15s;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i data-lucide="line-chart" style="width: 16px; height: 16px;"></i>
+                            <span style="font-size: var(--text-sm);">Go to Analytics</span>
+                        </div>
+                        <kbd style="font-size: 10px; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-color); color: var(--text-secondary);">G A</kbd>
+                    </div>
+                    <div class="command-item" data-action="nav" data-target="servers" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: var(--radius-sm); color: var(--text-secondary); cursor: pointer; transition: background 0.15s;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i data-lucide="server" style="width: 16px; height: 16px;"></i>
+                            <span style="font-size: var(--text-sm);">Go to Servers</span>
+                        </div>
+                        <kbd style="font-size: 10px; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-color); color: var(--text-secondary);">G S</kbd>
+                    </div>
+                    <div class="command-item" data-action="nav" data-target="projects" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: var(--radius-sm); color: var(--text-secondary); cursor: pointer; transition: background 0.15s;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i data-lucide="folder-git-2" style="width: 16px; height: 16px;"></i>
+                            <span style="font-size: var(--text-sm);">Go to Projects</span>
+                        </div>
+                        <kbd style="font-size: 10px; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-color); color: var(--text-secondary);">G P</kbd>
+                    </div>
+                    <div class="command-item" data-action="nav" data-target="users" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: var(--radius-sm); color: var(--text-secondary); cursor: pointer; transition: background 0.15s;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i data-lucide="users" style="width: 16px; height: 16px;"></i>
+                            <span style="font-size: var(--text-sm);">Go to Team Members</span>
+                        </div>
+                        <kbd style="font-size: 10px; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-color); color: var(--text-secondary);">G T</kbd>
+                    </div>
+                    <div class="command-item" data-action="nav" data-target="billing" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: var(--radius-sm); color: var(--text-secondary); cursor: pointer; transition: background 0.15s;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i data-lucide="credit-card" style="width: 16px; height: 16px;"></i>
+                            <span style="font-size: var(--text-sm);">Go to Billing</span>
+                        </div>
+                        <kbd style="font-size: 10px; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-color); color: var(--text-secondary);">G B</kbd>
+                    </div>
+                    <div class="command-item" data-action="nav" data-target="settings" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: var(--radius-sm); color: var(--text-secondary); cursor: pointer; transition: background 0.15s;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+                            <span style="font-size: var(--text-sm);">Go to Settings</span>
+                        </div>
+                        <kbd style="font-size: 10px; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-color); color: var(--text-secondary);">G S</kbd>
+                    </div>
+                    <div class="command-item" data-action="nav" data-target="help" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: var(--radius-sm); color: var(--text-secondary); cursor: pointer; transition: background 0.15s;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i data-lucide="help-circle" style="width: 16px; height: 16px;"></i>
+                            <span style="font-size: var(--text-sm);">Go to Help Center</span>
+                        </div>
+                        <kbd style="font-size: 10px; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-color); color: var(--text-secondary);">G H</kbd>
+                    </div>
+                </div>
+                <div class="command-group">
+                    <div class="command-group-title" style="padding: 4px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.05em;">Quick Actions</div>
+                    <div class="command-item" data-action="trigger" data-target="new-server" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); color: var(--text-secondary); cursor: pointer; transition: background 0.15s;">
+                        <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                        <span style="font-size: var(--text-sm);">Provision New Server</span>
+                    </div>
+                    <div class="command-item" data-action="trigger" data-target="invite-member" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); color: var(--text-secondary); cursor: pointer; transition: background 0.15s;">
+                        <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i>
+                        <span style="font-size: var(--text-sm);">Invite Team Contributor</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
