@@ -6,6 +6,8 @@
 
 CloudScale is a premium, high-performance Enterprise SaaS Cloud Monitoring & Analytics Dashboard. Designed with a dark mode aesthetic, smooth glassmorphism UI card components, and fluid micro-animations, it provides devops professionals and cloud operators with real-time insight into server status, telemetry, and activity logs.
 
+🚀 **Live Demo:** [https://zarixlabs.github.io/cloudscale-saas-dashboard/](https://zarixlabs.github.io/cloudscale-saas-dashboard/)
+
 ---
 
 ## ✨ Features
