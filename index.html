@@ -18,9 +18,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=1.0.2">
 </head>
 <body>
+
+    <!-- Glowing background decorative blobs -->
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
 
     <!-- Responsive Sidebar Overlay -->
     <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
@@ -171,7 +175,9 @@
 
             <!-- Dashboard Viewport -->
             <main class="dashboard-viewport">
-                <!-- Dashboard Header Area -->
+                <!-- View: Dashboard -->
+                <div id="view-dashboard" class="app-view active">
+                    <!-- Dashboard Header Area -->
                 <div class="dashboard-header">
                     <div class="dashboard-title-area">
                         <div class="dashboard-welcome-row">
@@ -826,18 +832,598 @@
                                 </div>
                             </div>
                         </section>
-
                     </div><!-- /.right-column -->
 
                 </div><!-- /.lower-grid -->
+                </div><!-- /#view-dashboard -->
+
+                <!-- View: Analytics -->
+                <div id="view-analytics" class="app-view">
+                    <div class="dashboard-header">
+                        <div class="dashboard-title-area">
+                            <h1 class="dashboard-title">System Performance &amp; Analytics</h1>
+                            <p class="dashboard-subtitle">Real-time telemetry and resource usage tracking</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Analytics Overview Cards -->
+                    <div class="dashboard-grid metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-card-header">
+                                <span class="metric-label">Avg Response Time</span>
+                                <div class="metric-icon-wrapper blue-glow">
+                                    <i data-lucide="clock" class="text-blue"></i>
+                                </div>
+                            </div>
+                            <div class="metric-card-body">
+                                <div class="metric-value-row">
+                                    <h2 class="metric-value">245ms</h2>
+                                    <span class="trend-badge trend-up">
+                                        <i data-lucide="arrow-down-right" style="transform: rotate(180deg);"></i>
+                                        <span>-12.4%</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-card-header">
+                                <span class="metric-label">Error Rate</span>
+                                <div class="metric-icon-wrapper purple-glow">
+                                    <i data-lucide="alert-octagon" class="text-purple"></i>
+                                </div>
+                            </div>
+                            <div class="metric-card-body">
+                                <div class="metric-value-row">
+                                    <h2 class="metric-value">0.04%</h2>
+                                    <span class="trend-badge trend-down">
+                                        <i data-lucide="arrow-down-right"></i>
+                                        <span>-0.02%</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-card-header">
+                                <span class="metric-label">Total API Requests</span>
+                                <div class="metric-icon-wrapper blue-glow">
+                                    <i data-lucide="activity" class="text-blue"></i>
+                                </div>
+                            </div>
+                            <div class="metric-card-body">
+                                <div class="metric-value-row">
+                                    <h2 class="metric-value">1,248,390</h2>
+                                    <span class="trend-badge trend-up">
+                                        <i data-lucide="arrow-up-right"></i>
+                                        <span>+24.1%</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-card-header">
+                                <span class="metric-label">Cache Hit Ratio</span>
+                                <div class="metric-icon-wrapper purple-glow">
+                                    <i data-lucide="zap" class="text-purple"></i>
+                                </div>
+                            </div>
+                            <div class="metric-card-body">
+                                <div class="metric-value-row">
+                                    <h2 class="metric-value">94.2%</h2>
+                                    <span class="trend-badge trend-up">
+                                        <i data-lucide="arrow-up-right"></i>
+                                        <span>+0.8%</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Charts Area -->
+                    <div class="analytics-charts-grid">
+                        <div class="analytics-card">
+                            <div class="analytics-card-header">
+                                <div class="analytics-card-title-group">
+                                    <div class="analytics-icon-wrap">
+                                        <i data-lucide="line-chart" class="text-blue"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="section-title">Response Time Histograms</h2>
+                                        <p class="section-subtitle">P50, P90, and P99 latency tracking</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chart-canvas-wrapper" style="height: 300px; position: relative;">
+                                <canvas id="responseTimeChart" aria-label="Response Time Chart" role="img"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <div class="analytics-card-header">
+                                <div class="analytics-card-title-group">
+                                    <div class="analytics-icon-wrap">
+                                        <i data-lucide="bar-chart-3" class="text-purple"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="section-title">Traffic Distribution by Endpoint</h2>
+                                        <p class="section-subtitle">Hourly total requests processed</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chart-canvas-wrapper" style="height: 300px; position: relative;">
+                                <canvas id="trafficDistributionChart" aria-label="Traffic Distribution Chart" role="img"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Simulated Terminal Logs Section -->
+                    <section class="section-card terminal-logs-section" style="margin-top: var(--spacing-lg);">
+                        <div class="section-card-header">
+                            <div class="section-header-title-group">
+                                <h2 class="section-title">Global Telemetry Logs</h2>
+                                <p class="section-subtitle">Real-time log stream from analytics ingestion engine</p>
+                            </div>
+                            <button class="btn btn-secondary btn-sm" id="clearLogsBtn">
+                                <i data-lucide="trash-2"></i>
+                                <span>Clear Console</span>
+                            </button>
+                        </div>
+                        <div class="terminal-body" id="globalLogsTerminal">
+                            <div class="terminal-line"><span class="terminal-time">[16:04:12]</span> <span class="text-success">[INFO]</span> Analytics ingestion engine initialized.</div>
+                            <div class="terminal-line"><span class="terminal-time">[16:04:13]</span> <span class="text-success">[INFO]</span> Listening on TCP port 9092.</div>
+                            <div class="terminal-line"><span class="terminal-time">[16:04:15]</span> <span class="text-success">[INFO]</span> Ingestion stream connected for cluster 'us-east-1'.</div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- View: Servers -->
+                <div id="view-servers" class="app-view">
+                    <div class="dashboard-header">
+                        <div class="dashboard-title-area">
+                            <h1 class="dashboard-title">Cloud Infrastructure Status</h1>
+                            <p class="dashboard-subtitle">Manage and monitor server deployments</p>
+                        </div>
+                        <div class="dashboard-actions">
+                            <button class="btn btn-primary" id="addServerBtnMain">
+                                <i data-lucide="plus"></i>
+                                <span>New Server</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Server Filters & Search -->
+                    <div class="filters-bar" style="display: flex; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                        <div class="search-container" style="flex: 1; max-width: 400px; min-width: 250px;">
+                            <i data-lucide="search" class="search-icon"></i>
+                            <input type="text" placeholder="Search servers by name, IP, region..." class="search-input" id="serversViewSearch">
+                        </div>
+                        <div class="chart-filter-tabs" role="group" aria-label="Server status filter" id="serverFilterGroup">
+                            <button class="chart-filter-btn active" data-server-filter="all">All Servers</button>
+                            <button class="chart-filter-btn" data-server-filter="online">Online</button>
+                            <button class="chart-filter-btn" data-server-filter="warning">High Load</button>
+                            <button class="chart-filter-btn" data-server-filter="offline">Offline</button>
+                        </div>
+                    </div>
+
+                    <!-- Servers Dynamic List Grid -->
+                    <div class="infra-grid" id="serversViewGrid">
+                        <!-- Loaded dynamically via JS -->
+                    </div>
+
+                    <!-- Floating Terminal Drawer for Selected Server -->
+                    <div class="terminal-drawer" id="serverTerminalDrawer" style="display: none; margin-top: var(--spacing-lg);">
+                        <div class="terminal-drawer-header">
+                            <div class="terminal-drawer-title">
+                                <i data-lucide="terminal"></i>
+                                <span id="terminalDrawerServerName">prod-server-01</span> &mdash; Server Log Console
+                            </div>
+                            <button class="terminal-close-btn" id="closeTerminalDrawerBtn" aria-label="Close terminal">
+                                <i data-lucide="x"></i>
+                            </button>
+                        </div>
+                        <div class="terminal-body" id="serverTerminalBody">
+                            <div class="terminal-line"><span class="terminal-time">[16:04:12]</span> Connection established with ssh-agent.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View: Projects -->
+                <div id="view-projects" class="app-view">
+                    <div class="dashboard-header">
+                        <div class="dashboard-title-area">
+                            <h1 class="dashboard-title">Active Projects</h1>
+                            <p class="dashboard-subtitle">Manage code repositories, build releases, and deployment configurations</p>
+                        </div>
+                    </div>
+
+                    <!-- Projects Grid -->
+                    <div class="projects-grid" id="projectsGrid">
+                        <!-- Loaded dynamically via JS -->
+                    </div>
+                </div>
+
+                <!-- View: Team -->
+                <div id="view-users" class="app-view">
+                    <div class="dashboard-header">
+                        <div class="dashboard-title-area">
+                            <h1 class="dashboard-title">Team Management</h1>
+                            <p class="dashboard-subtitle">Manage member profiles, access roles, and permissions</p>
+                        </div>
+                        <div class="dashboard-actions">
+                            <button class="btn btn-primary" id="inviteMemberBtnMain">
+                                <i data-lucide="user-plus"></i>
+                                <span>Invite Member</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Team Members Table View -->
+                    <section class="section-card">
+                        <div class="table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email Address</th>
+                                        <th>Access Role</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="teamViewTableBody">
+                                    <!-- Loaded Dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- View: Billing -->
+                <div id="view-billing" class="app-view">
+                    <div class="dashboard-header">
+                        <div class="dashboard-title-area">
+                            <h1 class="dashboard-title">Billing &amp; Subscriptions</h1>
+                            <p class="dashboard-subtitle">Manage credit cards, view invoices, and plan details</p>
+                        </div>
+                    </div>
+
+                    <div class="billing-content-grid">
+                        <div class="billing-left-col">
+                            <!-- Plan Details Card -->
+                            <div class="section-card billing-plan-card">
+                                <h3 class="billing-card-title">Subscription Overview</h3>
+                                <div class="billing-plan-info">
+                                    <div class="plan-details-text">
+                                        <span class="plan-badge">Enterprise Plan</span>
+                                        <span class="plan-price">$299<span class="price-suffix">/month</span></span>
+                                    </div>
+                                    <div class="plan-progress-container">
+                                        <div class="plan-progress-header">
+                                            <span>Current Usage (Compute Hours)</span>
+                                            <span>642 hrs / 1,000 hrs</span>
+                                        </div>
+                                        <div class="progress-track">
+                                            <div class="progress-fill fill-blue" style="width: 64.2%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="billing-card-footer" style="display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-md);">
+                                    <button class="btn btn-primary">Upgrade Plan</button>
+                                    <button class="btn btn-secondary">Cancel Subscription</button>
+                                </div>
+                            </div>
+
+                            <!-- Payment Method Card -->
+                            <div class="section-card billing-payment-card" style="margin-top: var(--spacing-lg);">
+                                <h3 class="billing-card-title">Payment Method</h3>
+                                <div class="card-details-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--spacing-sm);">
+                                    <div class="credit-card-preview" style="display: flex; align-items: center; gap: var(--spacing-md);">
+                                        <i data-lucide="credit-card" class="card-brand-icon" style="color: var(--color-blue); width: 24px; height: 24px;"></i>
+                                        <div class="card-digits" style="display: flex; flex-direction: column;">
+                                            <span style="font-weight: 500;">Visa ending in 4242</span>
+                                            <span class="card-expiry" style="color: var(--color-text-muted); font-size: 0.8125rem;">Expires 12/28</span>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-secondary btn-sm" id="editPaymentBtn">Update</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Invoices List -->
+                        <div class="billing-right-col">
+                            <section class="section-card billing-invoices-section">
+                                <h3 class="billing-card-title" style="margin-bottom: var(--spacing-md);">Invoices History</h3>
+                                <div class="table-wrapper">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Invoice ID</th>
+                                                <th>Date</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="invoicesTableBody">
+                                            <!-- Dynamically populated invoices -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View: Settings -->
+                <div id="view-settings" class="app-view">
+                    <div class="dashboard-header">
+                        <div class="dashboard-title-area">
+                            <h1 class="dashboard-title">System Settings</h1>
+                            <p class="dashboard-subtitle">Adjust system parameters, profiles, and API access keys</p>
+                        </div>
+                    </div>
+
+                    <div class="settings-layout-grid">
+                        <!-- Navigation Tabs (Vertical on desktop) -->
+                        <div class="settings-sidebar-nav">
+                            <button class="settings-nav-item active" data-settings-tab="profile">
+                                <i data-lucide="user"></i>
+                                <span>Profile Details</span>
+                            </button>
+                            <button class="settings-nav-item" data-settings-tab="notifications">
+                                <i data-lucide="bell"></i>
+                                <span>Notifications</span>
+                            </button>
+                            <button class="settings-nav-item" data-settings-tab="api-keys">
+                                <i data-lucide="key"></i>
+                                <span>API Credentials</span>
+                            </button>
+                        </div>
+
+                        <!-- Settings Content Panels -->
+                        <div class="settings-content-pane">
+                            <!-- Panel 1: Profile -->
+                            <div class="settings-panel active" id="settings-panel-profile">
+                                <h3 class="settings-panel-title">Profile Settings</h3>
+                                <form id="profileSettingsForm" style="margin-top: var(--spacing-md);">
+                                    <div class="form-group-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
+                                        <div class="form-group">
+                                            <label for="profileName" class="form-label">Full Name</label>
+                                            <input type="text" id="profileName" class="form-input" value="Alex Rivera">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="profileEmail" class="form-label">Email Address</label>
+                                            <input type="email" id="profileEmail" class="form-input" value="alex.rivera@cloudscale.io">
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="margin-top: var(--spacing-md);">
+                                        <label for="profileAvatar" class="form-label">Profile Avatar URL</label>
+                                        <input type="text" id="profileAvatar" class="form-input" value="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop">
+                                    </div>
+                                    <div class="form-group" style="margin-top: var(--spacing-md);">
+                                        <label for="profileRole" class="form-label">System Role</label>
+                                        <input type="text" id="profileRole" class="form-input" value="Administrator" disabled>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" style="margin-top: var(--spacing-lg);">Save Profile</button>
+                                </form>
+                            </div>
+
+                            <!-- Panel 2: Notifications -->
+                            <div class="settings-panel" id="settings-panel-notifications">
+                                <h3 class="settings-panel-title">Notification Configuration</h3>
+                                <form id="notificationSettingsForm" style="margin-top: var(--spacing-md);">
+                                    <div class="checkbox-group" style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                                        <label class="checkbox-label" style="display: flex; align-items: flex-start; gap: var(--spacing-md); cursor: pointer;">
+                                            <input type="checkbox" id="notifEmail" checked style="margin-top: 4px;">
+                                            <span class="checkbox-text-wrap">
+                                                <strong style="display: block;">Email Notifications</strong>
+                                                <span class="checkbox-desc" style="font-size: 0.8125rem; color: var(--color-text-muted);">Send weekly activity reports and critical threshold alerts</span>
+                                            </span>
+                                        </label>
+                                        <label class="checkbox-label" style="display: flex; align-items: flex-start; gap: var(--spacing-md); cursor: pointer;">
+                                            <input type="checkbox" id="notifSlack" checked style="margin-top: 4px;">
+                                            <span class="checkbox-text-wrap">
+                                                <strong style="display: block;">Slack Integration Alerts</strong>
+                                                <span class="checkbox-desc" style="font-size: 0.8125rem; color: var(--color-text-muted);">Post real-time high-load warning triggers to slack channel</span>
+                                            </span>
+                                        </label>
+                                        <label class="checkbox-label" style="display: flex; align-items: flex-start; gap: var(--spacing-md); cursor: pointer;">
+                                            <input type="checkbox" id="notifPush" style="margin-top: 4px;">
+                                            <span class="checkbox-text-wrap">
+                                                <strong style="display: block;">Browser Push Notifications</strong>
+                                                <span class="checkbox-desc" style="font-size: 0.8125rem; color: var(--color-text-muted);">Instant banner popups on server reboots or build failures</span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" style="margin-top: var(--spacing-lg);">Save Preferences</button>
+                                </form>
+                            </div>
+
+                            <!-- Panel 3: API Keys -->
+                            <div class="settings-panel" id="settings-panel-api-keys">
+                                <h3 class="settings-panel-title">API Authentication Credentials</h3>
+                                <p class="settings-panel-desc" style="color: var(--color-text-muted); margin-bottom: var(--spacing-md); font-size: 0.875rem;">Use these credential keys to query the CloudScale ingestion engine programmatically.</p>
+                                <div class="api-key-container" style="margin-top: var(--spacing-md);">
+                                    <label class="form-label" style="display: block; margin-bottom: var(--spacing-xs);">Active API Key</label>
+                                                                   <div class="api-key-input-row" style="display: flex; gap: var(--spacing-sm);">
+                                        <input type="password" id="apiKeyVal" class="form-input text-mono" value="sk_live_placeholder_key_not_real_12345" readonly style="flex: 1;">
+                                        <button class="btn btn-secondary" id="toggleApiKeyBtn" title="Show Key" style="padding: 0 12px; display: flex; align-items: center; justify-content: center;">
+                                            <i data-lucide="eye"></i>
+                                        </button>
+                                        <button class="btn btn-secondary" id="copyApiKeyBtn" title="Copy to clipboard" style="padding: 0 12px; display: flex; align-items: center; justify-content: center;">
+                                            <i data-lucide="copy"></i>
+                                        </button>
+                                    </div>
+                                    <button class="btn btn-danger btn-sm" id="regenerateApiKeyBtn" style="margin-top: var(--spacing-md);">Regenerate Credentials</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View: Help -->
+                <div id="view-help" class="app-view">
+                    <div class="dashboard-header">
+                        <div class="dashboard-title-area">
+                            <h1 class="dashboard-title">Help &amp; Documentation Center</h1>
+                            <p class="dashboard-subtitle">Find answers to frequently asked questions or file a support ticket</p>
+                        </div>
+                    </div>
+
+                    <div class="help-content-grid">
+                        <!-- FAQ Accordion -->
+                        <div class="help-left-col">
+                            <section class="section-card">
+                                <h3 class="section-title" style="margin-bottom: var(--spacing-md);">Frequently Asked Questions</h3>
+                                <div class="faq-accordion">
+                                    <div class="faq-item">
+                                        <button class="faq-trigger" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-md) 0; background: none; border: none; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--color-text); font-weight: 600; cursor: pointer; text-align: left;">
+                                            <span>How do I link a new GitHub repository?</span>
+                                            <i data-lucide="chevron-down" class="faq-icon" style="transition: transform 0.2s;"></i>
+                                        </button>
+                                        <div class="faq-panel" style="max-height: 0; overflow: hidden; transition: max-height 0.25s ease-out; padding-right: var(--spacing-md);">
+                                            <p style="padding: var(--spacing-sm) 0; color: var(--color-text-muted); font-size: 0.875rem; line-height: 1.5;">Navigate to the <strong>Projects</strong> tab, link your GitHub organization, and choose the target repository to deploy. The dashboard automatically sets up git hooks for deploy triggers.</p>
+                                        </div>
+                                    </div>
+                                    <div class="faq-item">
+                                        <button class="faq-trigger" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-md) 0; background: none; border: none; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--color-text); font-weight: 600; cursor: pointer; text-align: left;">
+                                            <span>What causes a 'High Load' server warning state?</span>
+                                            <i data-lucide="chevron-down" class="faq-icon" style="transition: transform 0.2s;"></i>
+                                        </button>
+                                        <div class="faq-panel" style="max-height: 0; overflow: hidden; transition: max-height 0.25s ease-out; padding-right: var(--spacing-md);">
+                                            <p style="padding: var(--spacing-sm) 0; color: var(--color-text-muted); font-size: 0.875rem; line-height: 1.5;">A server enters the warning state when sustained CPU or RAM usage averages above 85% for more than 5 minutes. Consider scaling vertically or adding replicas.</p>
+                                        </div>
+                                    </div>
+                                    <div class="faq-item">
+                                        <button class="faq-trigger" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-md) 0; background: none; border: none; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--color-text); font-weight: 600; cursor: pointer; text-align: left;">
+                                            <span>How can I regenerate API credentials safely?</span>
+                                            <i data-lucide="chevron-down" class="faq-icon" style="transition: transform 0.2s;"></i>
+                                        </button>
+                                        <div class="faq-panel" style="max-height: 0; overflow: hidden; transition: max-height 0.25s ease-out; padding-right: var(--spacing-md);">
+                                            <p style="padding: var(--spacing-sm) 0; color: var(--color-text-muted); font-size: 0.875rem; line-height: 1.5;">Under <strong>Settings</strong> > <strong>API Credentials</strong>, click <strong>Regenerate Credentials</strong>. Note that this immediately invalidates the previous token key, and any existing external scripts using it will fail.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+
+                        <!-- Ticket Submission Form -->
+                        <div class="help-right-col">
+                            <section class="section-card">
+                                <h3 class="section-title" style="margin-bottom: var(--spacing-md);">File Support Ticket</h3>
+                                <form id="supportTicketForm">
+                                    <div class="form-group">
+                                        <label for="ticketSubject" class="form-label">Issue Subject</label>
+                                        <input type="text" id="ticketSubject" class="form-input" placeholder="Summarize your issue..." required>
+                                    </div>
+                                    <div class="form-group" style="margin-top: var(--spacing-md);">
+                                        <label for="ticketPriority" class="form-label">Severity Level</label>
+                                        <select id="ticketPriority" class="form-input">
+                                            <option value="low">Low (General Query)</option>
+                                            <option value="normal" selected>Normal (Standard Issue)</option>
+                                            <option value="high">High (Prod Server Warning)</option>
+                                            <option value="critical">Critical (System Outage)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" style="margin-top: var(--spacing-md);">
+                                        <label for="ticketMessage" class="form-label">Description Details</label>
+                                        <textarea id="ticketMessage" class="form-input" rows="4" placeholder="Detail your problem here..." required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" style="margin-top: var(--spacing-lg);">Submit Ticket</button>
+                                </form>
+                            </section>
+                        </div>
+                    </div>
+                </div>
 
             </main>
         </div>
     </div>
 
+    <!-- Modal: New Server -->
+    <div class="modal-overlay" id="newServerModal" aria-hidden="true">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Provision New Cloud Server</h3>
+                <button class="modal-close-btn" id="closeNewServerModalBtn" aria-label="Close modal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <form id="newServerForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="serverNameInput" class="form-label">Server Hostname</label>
+                        <input type="text" id="serverNameInput" class="form-input" placeholder="e.g. prod-api-05" required>
+                    </div>
+                    <div class="form-group" style="margin-top: var(--spacing-md);">
+                        <label for="serverRegionInput" class="form-label">Cloud Datacenter Region</label>
+                        <select id="serverRegionInput" class="form-input">
+                            <option value="us-east-1">us-east-1 (N. Virginia)</option>
+                            <option value="us-west-2">us-west-2 (Oregon)</option>
+                            <option value="eu-west-1">eu-west-1 (Ireland)</option>
+                            <option value="ap-southeast-1">ap-southeast-1 (Singapore)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-top: var(--spacing-md);">
+                        <label for="serverTypeInput" class="form-label">Instance Capacity Size</label>
+                        <select id="serverTypeInput" class="form-input">
+                            <option value="t3.medium">t3.medium (2 vCPU, 4GB RAM)</option>
+                            <option value="t3.large">t3.large (2 vCPU, 8GB RAM)</option>
+                            <option value="t3.xlarge" selected>t3.xlarge (4 vCPU, 16GB RAM)</option>
+                            <option value="c5.2xlarge">c5.2xlarge (8 vCPU, 16GB RAM)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: var(--spacing-sm); margin-top: var(--spacing-lg);">
+                    <button type="button" class="btn btn-secondary" id="cancelNewServerModalBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Provision Server</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Invite Member -->
+    <div class="modal-overlay" id="inviteMemberModal" aria-hidden="true">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Invite New Team Contributor</h3>
+                <button class="modal-close-btn" id="closeInviteModalBtn" aria-label="Close modal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <form id="inviteMemberForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="memberNameInput" class="form-label">Teammate Full Name</label>
+                        <input type="text" id="memberNameInput" class="form-input" placeholder="e.g. John Doe" required>
+                    </div>
+                    <div class="form-group" style="margin-top: var(--spacing-md);">
+                        <label for="memberEmailInput" class="form-label">Email Address</label>
+                        <input type="email" id="memberEmailInput" class="form-input" placeholder="e.g. john@cloudscale.io" required>
+                    </div>
+                    <div class="form-group" style="margin-top: var(--spacing-md);">
+                        <label for="memberRoleInput" class="form-label">System Access Permission Role</label>
+                        <select id="memberRoleInput" class="form-input">
+                            <option value="Admin">Admin (Full Owner Privilege)</option>
+                            <option value="DevOps Lead">DevOps Lead (Infra Deployment)</option>
+                            <option value="Backend Eng.">Backend Eng. (Code Integrator)</option>
+                            <option value="Frontend Eng." selected>Frontend Eng. (UI Designer)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: var(--spacing-sm); margin-top: var(--spacing-lg);">
+                    <button type="button" class="btn btn-secondary" id="cancelInviteModalBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Send Invitation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toasts Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
     <!-- App Logic Script -->
-    <script src="app.js"></script>
+    <script src="app.js?v=1.0.2"></script>
     <!-- Extended Interactions Script -->
-    <script src="script.js"></script>
+    <script src="script.js?v=1.0.2"></script>
 </body>
 </html>
